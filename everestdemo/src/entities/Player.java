@@ -23,7 +23,7 @@ public class Player extends Entity{
     private int playerDir = -1;
     private boolean moving = false, attacking = false;
     private boolean left, up, right, down, jump;
-    private float playerSpeed = 2.0f;
+    private float playerSpeed = 1.0f * SCALE;
 
     private int[][] lvlData;
 
@@ -53,7 +53,7 @@ public class Player extends Entity{
         this.gamePanel = game.getGamePanel(); // Retrieve GamePanel from Game
         loadAnimations();
         System.out.println("GamePanel reference in Player: " + this.gamePanel);
-        initHitbox(x, y, 21 * SCALE, (float)28.5*SCALE);
+        initHitbox(x, y, (int)(21 * SCALE), (int)(28.5*SCALE));
         initArm(); // Initialize the arm
         loadArmSprite();
 

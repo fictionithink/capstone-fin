@@ -17,18 +17,29 @@ public class GamePanel extends JPanel {
     private Game game;
     private float mouseX, mouseY; // Mouse position fields
 
+    private boolean isReadyForInput = false;  // Tracks when game is ready for mouse input
+
     public GamePanel(Game game) {
         this.game = game;
-
-        // Debugging GamePanel initialization
-        System.out.println("GamePanel created: " + this);
+        System.out.println("GamePanel initialized with Game: " + (game != null));
 
         setPanelSize();
         setFocusable(true);
-        MouseInputs mouseInputs = new MouseInputs(this); // Pass GamePanel to MouseInputs
         addKeyListener(new KeyboardInputs(this));                               // naa ni ang keyboardInputs in another package named keyboardInputs para dili mag yagaw2
+
+        MouseInputs mouseInputs = new MouseInputs(this); // Pass GamePanel to MouseInputs
         addMouseListener(mouseInputs);
         addMouseMotionListener(mouseInputs);
+    }
+
+    // Method to set mouse input readiness to true after rendering
+    public void enableMouseInput() {
+        isReadyForInput = true;  // Enables mouse input
+    }
+
+    // Getter for checking if mouse input is allowed
+    public boolean isReadyForInput() {
+        return isReadyForInput;
     }
 
 ///////// ▼ ▼ ▼ ---------------- GAME PANEL METHODS ---------------- ▼ ▼ ▼ /////////

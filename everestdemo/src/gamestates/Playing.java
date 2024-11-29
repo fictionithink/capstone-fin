@@ -132,7 +132,7 @@ public class Playing extends State implements Statemethods{
 //                player.setUp(false);
 //                break;
             case KeyEvent.VK_A:                         //VK_( A ) key
-                System.out.println("Pressing A");
+//                System.out.println("Pressing A");
                 player.setLeft(false);
                 break;
 //            case KeyEvent.VK_S:                         //VK_( S ) key
@@ -140,11 +140,11 @@ public class Playing extends State implements Statemethods{
 //                player.setDown(false);
 //                break;
             case KeyEvent.VK_D:                         //VK_( D ) key
-                System.out.println("Pressing D");
+//                System.out.println("Pressing D");
                 player.setRight(false);
                 break;
             case KeyEvent.VK_SPACE:                         //VK_( Space bar ) key
-                System.out.println("Pressing Space bar");
+//                System.out.println("Pressing Space bar");
                 player.setJump(false);
                 break;
         }
