@@ -15,8 +15,8 @@ public class LoadSave {
     public static final String LEVEL_1_DATA = "level_1_data.png";
     public static final String CYBER_ARM = "cyber_arm.png";
     public static final String MENU_BUTTONS = "menu_atlas.png";
-    public static final String MENU_BACKGROUND = "???????????????????????.png";
-    public static final String PAUSE_BACKGROUND = "pause menu.png";
+//    public static final String MENU_BACKGROUND = "???????????????????????.png";
+//    public static final String PAUSE_BACKGROUND = "pause menu.png";
 
     public static final String MENU_BUTTONS = "menu_atlas.png";
 
