@@ -20,21 +20,32 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
         this.gamePanel = gamePanel;
     }
 
+
     //MOUSE LISTENER METHODS vvv
     @Override
     public void mouseClicked(MouseEvent e) {
+        if (!gamePanel.isReadyForInput()) return; // Ignore if not ready
 
+        switch (Gamestate.state){
+            case PLAYING:
+                System.out.println("attack initiated");
+                gamePanel.getGame().getPlaying().mouseClicked(e);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("attack initiated");
+        if (!gamePanel.isReadyForInput()) return; // Ignore if not ready
+
         switch (Gamestate.state){
             case PLAYING:
-                gamePanel.getGame().getPlaying().mouseClicked(e);
+                gamePanel.getGame().getPlaying().mousePressed(e);
                 break;
             case MENU:
-                gamePanel.getGame().getMenu().mouseClicked(e);
+                gamePanel.getGame().getMenu().mousePressed(e);
                 break;
             default:
                 break;
@@ -43,7 +54,18 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (!gamePanel.isReadyForInput()) return; // Ignore if not ready
 
+        switch (Gamestate.state){
+            case PLAYING:
+                gamePanel.getGame().getPlaying().mouseReleased(e);
+                break;
+            case MENU:
+                gamePanel.getGame().getMenu().mouseReleased(e);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -60,6 +82,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (!gamePanel.isReadyForInput()) return; // Ignore if not ready
 
         switch (Gamestate.state){
             case PLAYING:
@@ -75,6 +98,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        if (!gamePanel.isReadyForInput()) return; // Ignore if not ready
 
         switch (Gamestate.state){
             case PLAYING:
