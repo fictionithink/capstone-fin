@@ -13,7 +13,7 @@ import static main.Game.GAME_WIDTH;
 
 public class GamePanel extends JPanel {
 
-    private MouseInputs mouseInputs = new MouseInputs(this);
+//    private MouseInputs mouseInputs = new MouseInputs(this);
     private Game game;
     private float mouseX, mouseY; // Mouse position fields
 
@@ -33,13 +33,8 @@ public class GamePanel extends JPanel {
     }
 
     // Method to set mouse input readiness to true after rendering
-    public void enableMouseInput() {
-        isReadyForInput = true;  // Enables mouse input
-    }
-
-    // Getter for checking if mouse input is allowed
-    public boolean isReadyForInput() {
-        return isReadyForInput;
+    public boolean enableMouseInput() {
+        return true;  // Enables mouse input
     }
 
 ///////// ▼ ▼ ▼ ---------------- GAME PANEL METHODS ---------------- ▼ ▼ ▼ /////////
@@ -66,9 +61,9 @@ public class GamePanel extends JPanel {
     }
 
 
-    public void updateGame() {
-
-    }
+//    public void updateGame() {
+//
+//    }
 
     // a magical method that allows us to "paint" stuff
     @Override
@@ -78,7 +73,6 @@ public class GamePanel extends JPanel {
             try {
                 game.render(g);
             } catch (Exception e) {
-                e.printStackTrace();
                 System.err.println("Error during rendering: " + e.getMessage());
             }
         } else {
@@ -90,5 +84,4 @@ public class GamePanel extends JPanel {
     public Game getGame() {
         return game;
     }
-
 }

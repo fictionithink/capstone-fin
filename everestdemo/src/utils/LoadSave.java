@@ -12,15 +12,14 @@ public class LoadSave {
 
     public static final String PLAYER_ATLAS = "Cyborg_Spritesheet.png";
     public static final String LEVEL_ATLAS = "IndustrialTile_0.png";
-
     public static final String LEVEL_1_DATA = "level_1_data.png";
-
     public static final String CYBER_ARM = "cyber_arm.png";
-
     public static final String MENU_BUTTONS = "menu_atlas.png";
+    public static final String MENU_BACKGROUND = "???????????????????????.png";
+    public static final String PAUSE_BACKGROUND = "pause menu.png";
 
     public static BufferedImage getSpriteAtlas(String fileName) {
-        BufferedImage img = null;
+        BufferedImage img;
         InputStream is = LoadSave.class.getResourceAsStream("/" + fileName);
 
         try{
@@ -32,7 +31,7 @@ public class LoadSave {
             try {
                 is.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("InputStream is failed to close!");
             }
         }
         return  img;

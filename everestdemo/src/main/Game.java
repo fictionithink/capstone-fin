@@ -2,7 +2,6 @@ package main;
 
 // this class holds the entirety of the game
 
-import entities.Player;
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;

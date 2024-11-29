@@ -5,7 +5,6 @@ import main.GamePanel;
 import utils.LoadSave;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -20,22 +19,22 @@ public class Player extends Entity{
     private int aniTick, aniIndex, aniSpeed = 25;
 
     private int playerAction = IDLE;
-    private int playerDir = -1;
+//    private int playerDir = -1;
     private boolean moving = false, attacking = false;
     private boolean left, up, right, down, jump;
-    private float playerSpeed = 1.0f * SCALE;
+    private float playerSpeed = 1.1f * SCALE;
 
     private int[][] lvlData;
 
     private Rectangle2D.Float arm;
     private float gunAngle = 0;
-    private float mouseX, mouseY;
+//    private float mouseX, mouseY;
 
     //hitbox
     private float xDrawOffset = 4 * SCALE;
     private float yDrawOffset = 14 * SCALE;
-    private float currentArmOffsetX = 0;
-    private float currentArmOffsetY = 0;
+//    private float currentArmOffsetX = 0;
+//    private float currentArmOffsetY = 0;
 
     // jumping/gravity mechanics
     private float airSpeed = 0f;
@@ -322,36 +321,38 @@ public class Player extends Entity{
 
     }
 
-    public boolean isLeft() {
-        return left;
-    }
-
     public void setLeft(boolean left) {
         this.left = left;
     }
 
-    public boolean isUp() {
-        return up;
-    }
+//    public boolean isLeft() {
+//        return left;
+//    }
+
+//    public boolean isUp() {
+//        return up;
+//    }
+
+//    public boolean isRight() {
+//        return right;
+//    }
+
+//    public boolean isDown() {
+//        return down;
+//    }
+
+//public void setDown(boolean down) {
+//        this.down = down;
+//    }
 
     public void setUp(boolean up) {
         this.up = up;
     }
 
-    public boolean isRight() {
-        return right;
-    }
+
 
     public void setRight(boolean right) {
         this.right = right;
-    }
-
-    public boolean isDown() {
-        return down;
-    }
-
-    public void setDown(boolean down) {
-        this.down = down;
     }
 
     public void setJump(boolean jump){
