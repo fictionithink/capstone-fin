@@ -16,13 +16,14 @@ public class LoadSave {
     public static final String CYBER_ARM = "cyber_arm.png";
     public static final String MENU_BUTTONS = "menu_atlas.png";
     public static final String MENU_BACKGROUND = "citiciti.jpg";
-//    public static final String PAUSE_BACKGROUND = "pause menu.png";
-//    public static final String MENU_BUTTONS = "menu_atlas.png";
+    public static final String MENU_TITLE = "pathfinder.png";
+    public static final String LASER_BEAM_SPRITE = "laser_beam.png";
+    public static final String PAUSE_BACKGROUND = "pause menu.png";
+    public static final String SOUND_BUTTONS = "music atlas.png";
 
     public static BufferedImage getSpriteAtlas(String fileName) {
         BufferedImage img;
         InputStream is = LoadSave.class.getResourceAsStream("/" + fileName);
-
         try{
            img = ImageIO.read(is);
         } catch (IOException e) {
@@ -32,10 +33,10 @@ public class LoadSave {
             try {
                 is.close();
             } catch (IOException e) {
-                System.err.println("InputStream is failed to close!");
+                System.err.println("InputStream *is* failed to close!");
             }
         }
-        return  img;
+        return img;
     }
 
     public static int[][] GetLevelData(){

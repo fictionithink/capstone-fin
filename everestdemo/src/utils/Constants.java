@@ -11,6 +11,11 @@ public class Constants {
             public static final int B_WIDTH = (int) (B_WIDTH_DEFAULT * Game.SCALE);
             public static final int B_HEIGHT = (int) (B_HEIGHT_DEFAULT * Game.SCALE);
         }
+
+        public static class PauseButtons {
+            public static final int SOUND_SIZE_DEFAULT = 16;
+            public static final int SOUND_SIZE = (int) (SOUND_SIZE_DEFAULT * Game.SCALE);
+        }
     }
 
     public static class Directions {
@@ -39,9 +44,10 @@ public class Constants {
                 case IDLE:
                 case JUMPING:
                     return 4;
+                case PUNCHING:
+                    return 5;
                 case RUNNING:
                 case DEATH:
-                case PUNCHING:
                 case KICKING:
                 case RUNNING_ATTACK:
                     return 6;
@@ -52,7 +58,6 @@ public class Constants {
                     return 1;
             }
         }
-
     }
 
 }

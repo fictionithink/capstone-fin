@@ -46,36 +46,23 @@ public class MenuButton {
 
     public void update (){
         index = 0;
-
         if(mouseOver)
             index = 1;
         if(mousePressed)
             index = 2;
-
     }
 
-    public void setMouseOver(boolean mouseOver) {
-        this.mouseOver = mouseOver;
-    }
+    public void setMouseOver(boolean mouseOver) { this.mouseOver = mouseOver; }
 
-    public boolean isMousePressed() {
-        return mousePressed;
-    }
+    public boolean isMousePressed() { return mousePressed; }
 
-    public void setMousePressed(boolean mousePressed) {
-        this.mousePressed = mousePressed;
-    }
+    public void setMousePressed(boolean mousePressed) { this.mousePressed = mousePressed; }
 
-    public Rectangle getBounds(){
-        return bounds;
-    }
+    public Rectangle getBounds() { return bounds; }
 
-    public void applyGameState(){
-            Gamestate.state = state;
-            System.out.println("Game state set to " + state);
-    }
+    public void applyGameState() { Gamestate.state = state; }
 
-    public void resetBools(){
+    public void resetBools() {
         mouseOver = false;
         mousePressed = false;
     }
