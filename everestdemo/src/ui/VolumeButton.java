@@ -1,9 +1,8 @@
 package ui;
 
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import main.Game;
 import utils.LoadSave;
 import static utils.Constants.UI.VolumeButtons.*;
 
@@ -13,24 +12,29 @@ public class VolumeButton extends PauseButton {
     private BufferedImage slider;
     private int index = 0;
     private boolean mouseOver, mousePressed;
-    private int buttonX , minX, maxX;
+    private int buttonX, minX, maxX;
 
     public VolumeButton(int x, int y, int width, int height) {
-        super(x + width / 2, y, VOLUME_WIDTH, height);
-        bounds.x -= VOLUME_WIDTH / 2;
-        buttonX = x + width / 2;
-        this.x = x;
+        super(780 + width / 2, 570, VOLUME_WIDTH, height); // Center button
+        bounds.x -= VOLUME_WIDTH / 2; // Adjust bounds to match button's width
+
+        // Set slider's x and y based on red rectangle alignment
+        this.x = 724; // Adjust x to position slider horizontally
+        this.y = 580; // Adjust y to position slider vertically
         this.width = width;
-        minX = x + VOLUME_WIDTH / 2;
-        maxX = x + width - VOLUME_WIDTH / 2;
 
-        bounds = new Rectangle(x, y, VOLUME_WIDTH, height); // Initialize bounds
-        bounds.x = x + (width / 2) - (VOLUME_WIDTH / 2); // Align bounds with button sprite
+        // Initialize button position and movement boundaries
+        buttonX = this.x + this.width / 2; // Center the button
+        minX = this.x + VOLUME_WIDTH / 2;  // Set left boundary
+        maxX = this.x + this.width - VOLUME_WIDTH / 2; // Set right boundary
 
-        loadImgs();
+        // Dynamically set hitbox bounds for the button
+        bounds.x = buttonX - VOLUME_WIDTH / 2;
+        bounds.y = this.y;
+        bounds.width = VOLUME_WIDTH; // Match button width
+        bounds.height = height;      // Match button height
 
-        // Initialize button position with a default volume level (e.g., 50%)
-        updateButtonPosition(0.5f);
+        loadImgs(); // Load slider and button images
     }
 
     private void loadImgs() {
@@ -53,24 +57,15 @@ public class VolumeButton extends PauseButton {
     }
 
     public void draw(Graphics g) {
-        // Calculate the actual position of the slider
-        int sliderX = (int) (x + (53 * Game.SCALE)); // Slider's starting X position
-        int sliderY = (int) (y + (12 * Game.SCALE)); // Slider's Y position
+// Draw slider background
+        g.drawImage(slider, x, y, width, height, null);
 
-        // Draw the slider
-        g.drawImage(slider, sliderX, sliderY, SLIDER_WIDTH, height, null);
-
-        // Adjust buttonX to position it along the slider based on current volume
-        int buttonCenterX = buttonX - (VOLUME_WIDTH / 2);
-        g.drawImage(imgs[index], buttonCenterX, sliderY, VOLUME_WIDTH, height, null);
-
-        // Debug: Draw the bounds rectangle
-        g.setColor(Color.RED);
-        g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
+        // Draw draggable button (centered vertically on the slider)
+        g.drawImage(imgs[index], buttonX - VOLUME_WIDTH / 2, y, VOLUME_WIDTH, height, null);
     }
 
     public void changeX(int x) {
+        // Ensure buttonX stays within the slider's boundaries
         if (x < minX)
             buttonX = minX;
         else if (x > maxX)
@@ -78,20 +73,8 @@ public class VolumeButton extends PauseButton {
         else
             buttonX = x;
 
-        // Update the bounds rectangle
-        bounds.x = buttonX - (VOLUME_WIDTH / 2);
-        bounds.y = y;
-    }
-
-    public void updateButtonPosition(float currentVolumeLevel) {
-        // Calculate button X position based on volume level
-        buttonX = (int) (minX + currentVolumeLevel * (maxX - minX));
-
-        // Update the bounds rectangle to match the new button position
-        bounds.x = buttonX - (VOLUME_WIDTH / 2);
-        bounds.y = y;
-        bounds.width = VOLUME_WIDTH;
-        bounds.height = height;
+        // Update hitbox dynamically to match button position
+        bounds.x = buttonX - VOLUME_WIDTH / 2;
     }
 
     public void resetBools() {
