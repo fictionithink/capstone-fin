@@ -20,6 +20,8 @@ public class LoadSave {
     public static final String LASER_BEAM_SPRITE = "laser_beam.png";
     public static final String PAUSE_BACKGROUND = "pause menu.png";
     public static final String SOUND_BUTTONS = "music atlas.png";
+    public static final String URM_BUTTONS = "pause atlas.png";
+    public static final String VOLUME_BUTTONS = "volume_buttons.png";
 
     public static BufferedImage getSpriteAtlas(String fileName) {
         BufferedImage img;

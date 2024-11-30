@@ -22,10 +22,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
     public void mouseClicked(MouseEvent e) {
         if (!gamePanel.enableMouseInput()) return; // Ignore if not ready
 
-        if (Objects.requireNonNull(Gamestate.state) == Gamestate.PLAYING) {
-            System.out.println("attack initiated");
-            gamePanel.getGame().getPlaying().mouseClicked(e);
-        }
+        gamePanel.getGame().getPlaying().mouseClicked(e);
     }
 
     @Override
@@ -74,17 +71,13 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!gamePanel.enableMouseInput()) return; // Ignore if not ready
-
-        switch (Gamestate.state){
+        switch (Gamestate.state) {
             case PLAYING:
                 gamePanel.getGame().getPlaying().mouseDragged(e);
                 break;
-            case MENU:
-                gamePanel.getGame().getMenu().mouseDragged(e);
-                break;
             default:
                 break;
+
         }
     }
 

@@ -30,7 +30,7 @@ public class Playing extends State implements Statemethods{
         levelManager = new LevelManager(game);
         player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game);
         player.LoadLvlData(levelManager.getCurrentLevel().getLvlData());
-        pauseOverlay = new PauseOverlay();
+        pauseOverlay = new PauseOverlay(this);
     }
 
     @Override
@@ -38,9 +38,8 @@ public class Playing extends State implements Statemethods{
         if (!paused) {
             levelManager.update();
             player.update();
-        } else {
+        } else
             pauseOverlay.update();
-        }
     }
 
     @Override
@@ -132,5 +131,9 @@ public class Playing extends State implements Statemethods{
 
     public Player getPlayer() {
         return player;
+    }
+
+    public void unpauseGame() {
+        paused = false;
     }
 }
