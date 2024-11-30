@@ -16,6 +16,7 @@ public class LoadSave {
     public static final String CYBER_ARM = "cyber_arm.png";
     public static final String MENU_BUTTONS = "menu_atlas.png";
     public static final String MENU_BACKGROUND = "citiciti.jpg";
+    public static final String MENU_TITLE = "pathfinder.png";
 //    public static final String PAUSE_BACKGROUND = "pause menu.png";
 //    public static final String MENU_BUTTONS = "menu_atlas.png";
 

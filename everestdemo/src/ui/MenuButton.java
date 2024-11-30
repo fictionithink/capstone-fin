@@ -1,6 +1,7 @@
 package ui;
 
 import gamestates.Gamestate;
+import main.Game;
 import utils.LoadSave;
 
 import java.awt.*;

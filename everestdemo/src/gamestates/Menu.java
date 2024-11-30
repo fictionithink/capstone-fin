@@ -9,13 +9,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-import static main.Game.GAME_HEIGHT;
-import static main.Game.GAME_WIDTH;
+import static main.Game.*;
 
 public class Menu extends State implements Statemethods{
 
     private MenuButton[] buttons = new MenuButton[4];
-    private BufferedImage backgroundImg;
+    private BufferedImage backgroundImg, backgroundTitle;
+    private int menuX, menuY, menuWidth, menuHeight;
 
     public boolean isInitialized() {
         return isInitialized;
@@ -33,6 +33,12 @@ public class Menu extends State implements Statemethods{
 
     private void loadBackground() {
         backgroundImg = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND);
+        backgroundTitle = LoadSave.getSpriteAtlas(LoadSave.MENU_TITLE);
+
+        menuWidth = (int)(backgroundTitle.getWidth() * Game.SCALE);
+        menuHeight = (int)(backgroundTitle.getHeight() * Game.SCALE);
+        menuX = GAME_WIDTH / 2 - menuWidth / 2;
+        menuY = (int) (-120 * SCALE);
 
     }
 
@@ -55,6 +61,7 @@ public class Menu extends State implements Statemethods{
     public void draw(Graphics g) {
         if (isInitialized) {  // Only draw menu if it is initialized
             g.drawImage(backgroundImg, 0, 0, GAME_WIDTH, GAME_HEIGHT, null);
+            g.drawImage(backgroundTitle, 0, menuY, GAME_WIDTH, GAME_HEIGHT, null);
 
             for (MenuButton mb : buttons)
                 mb.draw(g);
