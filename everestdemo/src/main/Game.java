@@ -31,7 +31,6 @@ public class Game implements Runnable{
 
     private boolean initialized = false;
     private boolean isFirstRender = true; // Flag to track the first render cycle
-    private MouseInputs mouseInputs;
 
 //// Constructor (Game)
     public Game() {
@@ -54,7 +53,7 @@ public class Game implements Runnable{
 
         gamePanel.requestFocus();
 
-        gamePanel.enableMouseInput();  // This enables mouse events after the first render
+        gamePanel.enableMouseInput();  // Enable mouse input after the first render
 
 //        mouseInputs = new MouseInputs(gamePanel);  // Initialize MouseInputs
 //        gamePanel.addMouseMotionListener(mouseInputs);  // Add mouse motion listener
@@ -103,6 +102,9 @@ public class Game implements Runnable{
                 return; // Skip rendering if the menu isn't initialized
             }
             isFirstRender = false;  // Set the flag to prevent skipping future render cycles
+
+            // Enable mouse input after the first render
+            gamePanel.enableMouseInputAfterRender();
         }
 
         switch (Gamestate.state) {

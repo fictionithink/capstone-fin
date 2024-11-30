@@ -2,14 +2,20 @@ package gamestates;
 
 import main.Game;
 import ui.MenuButton;
+import utils.LoadSave;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+
+import static main.Game.GAME_HEIGHT;
+import static main.Game.GAME_WIDTH;
 
 public class Menu extends State implements Statemethods{
 
     private MenuButton[] buttons = new MenuButton[4];
+    private BufferedImage backgroundImg;
 
     public boolean isInitialized() {
         return isInitialized;
@@ -21,7 +27,13 @@ public class Menu extends State implements Statemethods{
         super(game);
         System.out.println("Menu constructor called.");
         loadButtons();
+        loadBackground();
         isInitialized = true;  // Mark as initialized after the menu and buttons are loaded
+    }
+
+    private void loadBackground() {
+        backgroundImg = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND);
+
     }
 
     private void loadButtons() {
@@ -42,6 +54,8 @@ public class Menu extends State implements Statemethods{
     @Override
     public void draw(Graphics g) {
         if (isInitialized) {  // Only draw menu if it is initialized
+            g.drawImage(backgroundImg, 0, 0, GAME_WIDTH, GAME_HEIGHT, null);
+
             for (MenuButton mb : buttons)
                 mb.draw(g);
         } else {

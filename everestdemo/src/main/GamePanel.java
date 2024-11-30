@@ -13,10 +13,8 @@ import static main.Game.GAME_WIDTH;
 
 public class GamePanel extends JPanel {
 
-//    private MouseInputs mouseInputs = new MouseInputs(this);
     private Game game;
     private float mouseX, mouseY; // Mouse position fields
-
     private boolean isReadyForInput = false;  // Tracks when game is ready for mouse input
 
     public GamePanel(Game game) {
@@ -32,9 +30,12 @@ public class GamePanel extends JPanel {
         addMouseMotionListener(mouseInputs);
     }
 
-    // Method to set mouse input readiness to true after rendering
+    public void enableMouseInputAfterRender() {
+        isReadyForInput = true;
+    }
+
     public boolean enableMouseInput() {
-        return true;  // Enables mouse input
+        return isReadyForInput;
     }
 
 ///////// ▼ ▼ ▼ ---------------- GAME PANEL METHODS ---------------- ▼ ▼ ▼ /////////
