@@ -1,5 +1,6 @@
 package gamestates;
 
+import entities.EnemyManager;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
@@ -11,8 +12,10 @@ import java.awt.event.MouseEvent;
 
 public class Playing extends State implements Statemethods{
 
+    private int xLvlOffset;
     private Player player;
     private LevelManager levelManager;
+    private EnemyManager enemyManager;
     private GamePanel gamePanel;
     private boolean paused;
 
@@ -35,9 +38,13 @@ public class Playing extends State implements Statemethods{
             System.out.println("GamePanel is correctly passed to Playing.");
         }
 
+
+
         System.out.println("Initializing LevelManager...");
         levelManager = new LevelManager(game);
         System.out.println("LevelManager initialized: " + (levelManager != null));
+
+        enemyManager = new EnemyManager(this);
 
         System.out.println("Initializing Player...");
         player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game);
@@ -53,6 +60,7 @@ public class Playing extends State implements Statemethods{
     public void update() {
         levelManager.update();
         player.update();
+        enemyManager.update(levelManager.getCurrentLevel().getLvlData(),player);
     }
 
     @Override
@@ -61,7 +69,8 @@ public class Playing extends State implements Statemethods{
             levelManager.draw(g);
         }
         if (player != null) {
-            player.render(g);
+            player.render(g,xLvlOffset);
+            enemyManager.draw(g,xLvlOffset);
         }
     }
 

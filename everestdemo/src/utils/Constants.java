@@ -4,6 +4,45 @@ import main.Game;
 
 public class Constants {
 
+    public static class EnemyConstants{
+        public static final int WORKER = 0;
+
+        public static final  int IDLE =0;
+        public static final  int RUNNING =1;
+        public static final  int HURT =2;
+        public static final  int DEAD =3;
+        public static final  int ATTACK =4;
+
+        public static final  int WORKER_WIDTH_DEFAULT=48;
+        public static final  int WORKER_HEIGHT_DEFAULT=48;
+
+        public static final int WORKER_WIDTH = (int)(WORKER_WIDTH_DEFAULT * Game.SCALE);
+        public static final int WORKER_HEIGHT = (int)(WORKER_HEIGHT_DEFAULT * Game.SCALE);
+
+        public static final int WORKER_DRAWOFFSET_X = (int)(48 * Game.SCALE);
+        public static final int WORKER_DRAWOFFSET_Y = (int)(48 * Game.SCALE);
+
+
+        public static int GetSpriteAmount(int enemy_type,int enemy_state){
+
+            switch(enemy_type){
+                case WORKER:
+                    switch (enemy_state){
+                        case IDLE:
+                                return 3;
+                        case RUNNING:
+                        case DEAD:
+                        case ATTACK:
+                            return 5;
+                        case HURT:
+                            return 1;
+                    }
+            }
+
+            return 0;
+        }
+    }
+
     public static class UI {
         public static class Buttons{
             public static final int B_WIDTH_DEFAULT = 96;

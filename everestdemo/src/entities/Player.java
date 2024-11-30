@@ -15,6 +15,11 @@ import static utils.HelpMethods.*;
 
 public class Player extends Entity{
 
+    //laser
+    private LaserBeam currentLaser;
+    private long laserStartTime;
+    private boolean canShoot= true;
+
     private BufferedImage[][] animations;
     private int aniTick, aniIndex, aniSpeed = 25;
 
@@ -57,6 +62,20 @@ public class Player extends Entity{
         loadArmSprite();
 
     }
+
+    public void shootLaser() {
+        // Starting position of the laser (center of the player's arm)
+        if(!canShoot) return;
+
+        float startX = arm.x + arm.width / 2;
+        float startY = arm.y + arm.height / 2;
+
+        // Create the laser
+        currentLaser = new LaserBeam(startX, startY, gunAngle);
+        laserStartTime = System.currentTimeMillis();
+        canShoot=false;
+    }
+
 
     private void initArm() {
 
@@ -171,9 +190,23 @@ public class Player extends Entity{
         setAnimation();
         updateArmPosition(); // Update the arm's visual position
         updateArmRotation(); // Update the arm rotation
+
+        if (currentLaser != null) {
+            currentLaser.update();
+            if (currentLaser.isFaded()) { // 500 milliseconds = 0.5 seconds
+                currentLaser = null;
+            }
+        }
+
+        if(!canShoot){
+            long currentTime = System.currentTimeMillis();
+            if(currentTime - laserStartTime >=300){
+                canShoot=true;
+            }
+        }
     }
 
-    public void render(Graphics g) {
+    public void render(Graphics g, int lvlOffSet) {
         Graphics2D g2d = (Graphics2D) g;
         drawArm(g2d);
         g.drawImage(
@@ -184,6 +217,12 @@ public class Player extends Entity{
                 (int)(45 * SCALE),
                 null
         );
+        drawHitBox(g,lvlOffSet);
+
+
+        if (currentLaser != null) {
+            currentLaser.draw(g);
+        }
 
     }
 
