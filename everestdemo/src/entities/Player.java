@@ -106,6 +106,7 @@ public class Player extends Entity{
         float yOffset = -7 * SCALE;
 
         switch (playerAction) {
+            case PUNCHING:
             case IDLE:
                 xOffset = -2 * SCALE;
                 yOffset = -7 * SCALE;
@@ -113,7 +114,7 @@ public class Player extends Entity{
 
             case RUNNING:
                 if (aniIndex >= 0) {
-                    xOffset += 6 * SCALE;
+                    xOffset += 7 * SCALE;
                     yOffset += 3 * SCALE;
                 } else {
                     xOffset += 1 * SCALE;

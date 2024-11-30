@@ -4,6 +4,7 @@ import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import main.GamePanel;
+import ui.PauseOverlay;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,113 +15,57 @@ public class Playing extends State implements Statemethods{
     private Player player;
     private LevelManager levelManager;
     private GamePanel gamePanel;
-    private boolean paused;
+
+    private PauseOverlay pauseOverlay;
+    private boolean paused = false;
 
 
     public Playing(Game game, GamePanel gamePanel) {
         super(game);
         this.gamePanel = gamePanel; // Set GamePanel reference
-        if (gamePanel == null) {
-            System.err.println("GamePanel is null in Playing constructor! Check where it's being passed.");
-        } else {
-            System.out.println("GamePanel passed to Playing: " + gamePanel);
-        }
         initClasses();
     }
 
     private void initClasses() {
-        if (gamePanel == null) {
-            System.err.println("GamePanel is null in Playing.initClasses()! Check the constructor.");
-        } else {
-            System.out.println("GamePanel is correctly passed to Playing.");
-        }
-
-        System.out.println("Initializing LevelManager...");
         levelManager = new LevelManager(game);
-        System.out.println("LevelManager initialized: " + (levelManager != null));
-
-        System.out.println("Initializing Player...");
         player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game);
-        System.out.println("Player initialized: " + (player != null));
-
-        System.out.println("GamePanel reference in Game: " + gamePanel);
         player.LoadLvlData(levelManager.getCurrentLevel().getLvlData());
+        pauseOverlay = new PauseOverlay();
     }
-
-
 
     @Override
     public void update() {
-        levelManager.update();
-        player.update();
+        if (!paused) {
+            levelManager.update();
+            player.update();
+        } else {
+            pauseOverlay.update();
+        }
     }
 
     @Override
     public void draw(Graphics g) {
-        if (levelManager != null) {
-            levelManager.draw(g);
-        }
-        if (player != null) {
-            player.render(g);
-        }
+        levelManager.draw(g);
+        player.render(g);
+
+        if (paused)
+            pauseOverlay.draw(g);
     }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (gamePanel == null) {
-            System.err.println("GamePanel is null in Playing.mouseDragged()! Ensure it's initialized correctly.");
-            return;
-        }
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            player.setAttacking(true); // Ensure this is called
-        }
-    }
-
-
-    public void mouseDragged(MouseEvent e){
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        System.out.println("pressing mouse left");
-        if(e.getButton() == MouseEvent.BUTTON1){
-            player.setAttacking(true);
-        }
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        if (gamePanel == null) {
-            System.err.println("GamePanel is null in Playing.mouseMoved()! Ensure it's initialized correctly.");
-            return;
-        }
-        gamePanel.setMouseCoordinates(e.getX(), e.getY());
-    }
-
 
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()){                        // reads inputs
-//            case KeyEvent.VK_W:                         //VK_( W ) key
-//                player.setUp(true);
-//                break;
             case KeyEvent.VK_A:                         //VK_( A ) key
                 player.setLeft(true);
                 break;
-//            case KeyEvent.VK_S:                         //VK_( S ) key
-//                player.setDown(true);
-//                break;
             case KeyEvent.VK_D:                         //VK_( D ) key
                 player.setRight(true);
                 break;
             case KeyEvent.VK_SPACE:                         //VK_( Space bar ) key
                 player.setJump(true);
+                break;
+            case KeyEvent.VK_ESCAPE:
+                paused = !paused;
                 break;
         }
     }
@@ -128,27 +73,57 @@ public class Playing extends State implements Statemethods{
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()){                        // reads inputs
-//            case KeyEvent.VK_W:                         //VK_( W ) key
-//                System.out.println("Pressing W");
-//                player.setUp(false);
-//                break;
             case KeyEvent.VK_A:                         //VK_( A ) key
-//                System.out.println("Pressing A");
                 player.setLeft(false);
                 break;
-//            case KeyEvent.VK_S:                         //VK_( S ) key
-//                System.out.println("Pressing S");
-//                player.setDown(false);
-//                break;
             case KeyEvent.VK_D:                         //VK_( D ) key
-//                System.out.println("Pressing D");
                 player.setRight(false);
                 break;
             case KeyEvent.VK_SPACE:                         //VK_( Space bar ) key
-//                System.out.println("Pressing Space bar");
                 player.setJump(false);
                 break;
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1)
+            player.setAttacking(true); // Ensure this is called
+    }
+
+
+    public void mouseDragged(MouseEvent e) {
+        if (paused)
+            pauseOverlay.mouseDragged(e);
+
+    }
+
+    public void mousePressed(MouseEvent e) {
+        if (paused)
+            pauseOverlay.mousePressed(e);
+
+        int button = e.getButton();
+        if (button == MouseEvent.BUTTON1) { // Left-click
+            player.setAttacking(true); // Ensure this is called
+        } else if (button == MouseEvent.BUTTON3) { // Right-click
+            getPlayer().shootLaser();
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (paused)
+            pauseOverlay.mouseReleased(e);
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        if(paused)
+            pauseOverlay.mouseMoved(e);
+        else
+            gamePanel.setMouseCoordinates(e.getX(), e.getY());
+
     }
 
     public void windowFocusLost() {
