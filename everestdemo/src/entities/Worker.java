@@ -13,7 +13,7 @@ public class Worker extends Enemy {
         super(x, y, WORKER_WIDTH, WORKER_HEIGHT, WORKER);
 
         // Align hitbox size and offset
-        initHitbox(x, y + (int)(14 * Game.SCALE), (int)(30 * Game.SCALE), (int)(28.5 * Game.SCALE));
+        initHitbox(x+30, y + (int)(14 * Game.SCALE), (int)(30 * Game.SCALE), (int)(28.5 * Game.SCALE));
     }
 
     public void update(int[][] lvlData, Player player) {
