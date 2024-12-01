@@ -1,5 +1,6 @@
 package gamestates;
 
+import entities.EnemyManager;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
@@ -13,8 +14,10 @@ import java.awt.event.MouseEvent;
 
 public class Playing extends State implements Statemethods{
 
+    private int xLvlOffset;
     private Player player;
     private LevelManager levelManager;
+    private EnemyManager enemyManager;
     private GamePanel gamePanel;
 
     private PauseOverlay pauseOverlay;
@@ -36,6 +39,8 @@ public class Playing extends State implements Statemethods{
 
     private void initClasses() {
         levelManager = new LevelManager(game);
+
+        enemyManager = new EnemyManager(this);
         player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game);
         player.LoadLvlData(levelManager.getCurrentLevel().getLvlData());
         pauseOverlay = new PauseOverlay(this);
@@ -43,6 +48,23 @@ public class Playing extends State implements Statemethods{
 
     @Override
     public void update() {
+        levelManager.update();
+        player.update();
+        enemyManager.update(levelManager.getCurrentLevel().getLvlData(),player);
+    }
+
+    @Override
+    public void draw(Graphics g) {
+            levelManager.draw(g);
+            player.render(g,xLvlOffset);
+            enemyManager.draw(g,xLvlOffset);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            player.setAttacking(true); // Ensure this is called
+        }
         if (!paused) {
             levelManager.update();
             player.update();

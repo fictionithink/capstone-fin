@@ -55,7 +55,7 @@ public class LaserBeam {
     public void update() {
         // Gradually reduce the alpha value over time
         long elapsedTime = System.currentTimeMillis() - creationTime;
-        if (elapsedTime >= 500) { // After 0.5 seconds, start fading
+        if (elapsedTime >= 50) { // After 0.5 seconds, start fading
             alpha = Math.max(0, alpha - 5); // Decrease alpha, but ensure it doesn't go below 0
         }
     }

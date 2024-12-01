@@ -202,7 +202,7 @@ public class Player extends Entity{
 
         if(!canShoot){
             long currentTime = System.currentTimeMillis();
-            if(currentTime - laserStartTime >=700){
+            if(currentTime - laserStartTime >=300){
                 canShoot=true;
             }
         }
@@ -212,6 +212,7 @@ public class Player extends Entity{
         Graphics2D g2d = (Graphics2D) g;
         drawArm(g2d);
         g.drawImage(animations[playerAction][aniIndex], (int)(hitbox.x - xDrawOffset) - levelOffset, (int)(hitbox.y - yDrawOffset), (int)(45 * SCALE), (int)(45 * SCALE), null);
+        drawHitBox(g,lvlOffSet);
 
         if (currentLaser != null) {
             currentLaser.draw(g);
