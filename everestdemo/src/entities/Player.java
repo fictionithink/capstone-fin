@@ -105,6 +105,7 @@ public class Player extends Entity{
         float xOffset = hitbox.width / 2 - arm.width / 2;
         float yOffset = -7 * SCALE;
 
+        // Adjust arm position based on the player's current animation or action
         switch (playerAction) {
             case PUNCHING:
             case IDLE:
@@ -130,9 +131,9 @@ public class Player extends Entity{
                 break;
         }
 
-        arm.x = hitbox.x + xOffset;
+        // Adjust arm position to account for the level offset
+        arm.x = hitbox.x + xOffset - gamePanel.getGame().getPlaying().getXLevelOffset();
         arm.y = hitbox.y + yOffset;
-
     }
 
 
@@ -207,17 +208,10 @@ public class Player extends Entity{
         }
     }
 
-    public void render(Graphics g) {
+    public void render(Graphics g, int levelOffset) {
         Graphics2D g2d = (Graphics2D) g;
         drawArm(g2d);
-        g.drawImage(
-                animations[playerAction][aniIndex],
-                (int)(hitbox.x - xDrawOffset),
-                (int)(hitbox.y - yDrawOffset),
-                (int)(45 * SCALE),
-                (int)(45 * SCALE),
-                null
-        );
+        g.drawImage(animations[playerAction][aniIndex], (int)(hitbox.x - xDrawOffset) - levelOffset, (int)(hitbox.y - yDrawOffset), (int)(45 * SCALE), (int)(45 * SCALE), null);
 
         if (currentLaser != null) {
             currentLaser.draw(g);
@@ -270,8 +264,12 @@ public class Player extends Entity{
 
         if(jump)
             jump();
-        if (!left && !right && !inAir)
-            return; // No input, no movement
+//        if (!left && !right && !inAir)
+//            return; // No input, no movement
+
+        if(!inAir)
+            if((!left && !right) || (right && left))
+                return;
 
         float xSpeed = 0;
 

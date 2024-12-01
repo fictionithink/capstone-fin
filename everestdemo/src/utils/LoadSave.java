@@ -12,7 +12,8 @@ public class LoadSave {
 
     public static final String PLAYER_ATLAS = "Cyborg_Spritesheet.png";
     public static final String LEVEL_ATLAS = "IndustrialTile_0.png";
-    public static final String LEVEL_1_DATA = "level_1_data.png";
+//    public static final String LEVEL_1_DATA = "level_1_data.png";
+    public static final String LEVEL_1_DATA = "level_1_data_long.png";
     public static final String CYBER_ARM = "cyber_arm.png";
     public static final String MENU_BUTTONS = "menu_atlas.png";
     public static final String MENU_BACKGROUND = "citiciti.jpg";
@@ -42,8 +43,8 @@ public class LoadSave {
     }
 
     public static int[][] GetLevelData(){
-        int[][] lvlData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH];
         BufferedImage img = getSpriteAtlas(LEVEL_1_DATA);
+        int[][] lvlData = new int[img.getHeight()][img.getWidth()];
 
         for(int j = 0; j < img.getHeight(); j++){
             for(int i = 0; i < img.getWidth(); i++){

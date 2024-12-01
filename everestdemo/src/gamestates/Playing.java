@@ -5,6 +5,7 @@ import levels.LevelManager;
 import main.Game;
 import main.GamePanel;
 import ui.PauseOverlay;
+import utils.LoadSave;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -18,6 +19,13 @@ public class Playing extends State implements Statemethods{
 
     private PauseOverlay pauseOverlay;
     private boolean paused = false;
+
+    private int xLevelOffset;
+    private int leftBorder = (int) (0.4 * Game.GAME_WIDTH);
+    private int rightBorder = (int) (0.6 * Game.GAME_WIDTH);
+    private int levelTilesWide = LoadSave.GetLevelData()[0].length;
+    private int maxTilesOffset = levelTilesWide - Game.TILES_IN_WIDTH;
+    private int maxLevelOffsetX = maxTilesOffset * Game.TILES_SIZE;
 
 
     public Playing(Game game, GamePanel gamePanel) {
@@ -38,17 +46,37 @@ public class Playing extends State implements Statemethods{
         if (!paused) {
             levelManager.update();
             player.update();
+            checkCloseToBorder();
         } else
             pauseOverlay.update();
     }
 
+    private void checkCloseToBorder() {
+        int playerX = (int) player.getHitbox().x;
+        int diff = playerX - xLevelOffset;
+
+        if (diff > rightBorder)
+            xLevelOffset += diff - rightBorder;
+        else if (diff < leftBorder)
+            xLevelOffset += diff - leftBorder;
+
+        if (xLevelOffset > maxLevelOffsetX)
+            xLevelOffset = maxLevelOffsetX;
+        else if (xLevelOffset < 0)
+            xLevelOffset = 0;
+
+    }
+
     @Override
     public void draw(Graphics g) {
-        levelManager.draw(g);
-        player.render(g);
+        levelManager.draw(g, xLevelOffset);
+        player.render(g, xLevelOffset);
 
-        if (paused)
+        if (paused) {
+            g.setColor(new Color(0,0,0, 150));
+            g.fillRect(0,0,Game.GAME_WIDTH, Game.GAME_HEIGHT);
             pauseOverlay.draw(g);
+        }
     }
 
     @Override
@@ -136,4 +164,9 @@ public class Playing extends State implements Statemethods{
     public void unpauseGame() {
         paused = false;
     }
+
+    public int getXLevelOffset() {
+        return xLevelOffset;
+    }
+
 }
