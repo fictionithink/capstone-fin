@@ -15,21 +15,24 @@ public class LoadSave {
 
     public static final String PLAYER_ATLAS = "Cyborg_Spritesheet.png";
     public static final String LEVEL_ATLAS = "IndustrialTile_0.png";
-    public static final String LEVEL_1_DATA = "level_1_data.png";
+//    public static final String LEVEL_1_DATA = "level_1_data.png";
+    public static final String LEVEL_1_DATA = "level_1_data_long.png";
     public static final String CYBER_ARM = "cyber_arm.png";
     public static final String MENU_BUTTONS = "menu_atlas.png";
     public static final String MENU_BACKGROUND = "citiciti.jpg";
-    public static final String LASER_BEAM_SPRITE = "laser_beam.png";
-    public static final String MENU_TITLE = "pathfinder.png";
     public static final String ENEMY_WORKER_LEFT = "man_left_spritesheet.png";
     public static final String ENEMY_WORKER_RIGHT = "man_right_spritesheet.png";
-//    public static final String PAUSE_BACKGROUND = "pause menu.png";
-//    public static final String MENU_BUTTONS = "menu_atlas.png";
+    public static final String MENU_TITLE = "pathfinder.png";
+    public static final String LASER_BEAM_SPRITE = "laser_beam.png";
+    public static final String PAUSE_BACKGROUND = "pause menu.png";
+    public static final String SOUND_BUTTONS = "music atlas.png";
+    public static final String URM_BUTTONS = "pause atlas.png";
+    public static final String VOLUME_BUTTONS = "volume_buttons.png";
+
 
     public static BufferedImage getSpriteAtlas(String fileName) {
         BufferedImage img;
         InputStream is = LoadSave.class.getResourceAsStream("/" + fileName);
-
         try{
            img = ImageIO.read(is);
         } catch (IOException e) {
@@ -39,10 +42,10 @@ public class LoadSave {
             try {
                 is.close();
             } catch (IOException e) {
-                System.err.println("InputStream is failed to close!");
+                System.err.println("InputStream *is* failed to close!");
             }
         }
-        return  img;
+        return img;
     }
 
     public static ArrayList<Worker> GetWorkers(){
@@ -62,8 +65,8 @@ public class LoadSave {
     }
 
     public static int[][] GetLevelData(){
-        int[][] lvlData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH];
         BufferedImage img = getSpriteAtlas(LEVEL_1_DATA);
+        int[][] lvlData = new int[img.getHeight()][img.getWidth()];
 
         for(int j = 0; j < img.getHeight(); j++){
             for(int i = 0; i < img.getWidth(); i++){

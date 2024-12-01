@@ -50,6 +50,27 @@ public class Constants {
             public static final int B_WIDTH = (int) (B_WIDTH_DEFAULT * Game.SCALE);
             public static final int B_HEIGHT = (int) (B_HEIGHT_DEFAULT * Game.SCALE);
         }
+
+        public static class PauseButtons {
+            public static final int SOUND_SIZE_DEFAULT = 16;
+            public static final int SOUND_SIZE = (int) (SOUND_SIZE_DEFAULT * Game.SCALE);
+        }
+
+        public static class UrmButtons {
+            public static final int URM_DEFAULT_SIZE = 16;
+            public static final int URM_SIZE = (int)(URM_DEFAULT_SIZE * Game.SCALE);
+        }
+
+        public static class VolumeButtons {
+            public static final int VOLUME_DEFAULT_WIDTH = 28;
+            public static final int VOLUME_DEFAULT_HEIGHT = 43;
+            public static final int SLIDER_DEFAULT_WIDTH = 215;
+
+            public static final int VOLUME_WIDTH = (int)(VOLUME_DEFAULT_WIDTH * Game.SCALE/2);
+            public static final int VOLUME_HEIGHT = (int)(VOLUME_DEFAULT_HEIGHT * Game.SCALE/2);
+            public static final int SLIDER_WIDTH = (int)(SLIDER_DEFAULT_WIDTH * Game.SCALE/2);
+
+        }
     }
 
     public static class Directions {
@@ -78,9 +99,10 @@ public class Constants {
                 case IDLE:
                 case JUMPING:
                     return 4;
+                case PUNCHING:
+                    return 5;
                 case RUNNING:
                 case DEATH:
-                case PUNCHING:
                 case KICKING:
                 case RUNNING_ATTACK:
                     return 6;
@@ -91,7 +113,6 @@ public class Constants {
                     return 1;
             }
         }
-
     }
 
 }

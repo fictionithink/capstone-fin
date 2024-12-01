@@ -105,7 +105,9 @@ public class Player extends Entity{
         float xOffset = hitbox.width / 2 - arm.width / 2;
         float yOffset = -7 * SCALE;
 
+        // Adjust arm position based on the player's current animation or action
         switch (playerAction) {
+            case PUNCHING:
             case IDLE:
                 xOffset = -2 * SCALE;
                 yOffset = -7 * SCALE;
@@ -113,7 +115,7 @@ public class Player extends Entity{
 
             case RUNNING:
                 if (aniIndex >= 0) {
-                    xOffset += 6 * SCALE;
+                    xOffset += 7 * SCALE;
                     yOffset += 3 * SCALE;
                 } else {
                     xOffset += 1 * SCALE;
@@ -129,9 +131,9 @@ public class Player extends Entity{
                 break;
         }
 
-        arm.x = hitbox.x + xOffset;
+        // Adjust arm position to account for the level offset
+        arm.x = hitbox.x + xOffset - gamePanel.getGame().getPlaying().getXLevelOffset();
         arm.y = hitbox.y + yOffset;
-
     }
 
 
@@ -206,19 +208,11 @@ public class Player extends Entity{
         }
     }
 
-    public void render(Graphics g, int lvlOffSet) {
+    public void render(Graphics g, int levelOffset) {
         Graphics2D g2d = (Graphics2D) g;
         drawArm(g2d);
-        g.drawImage(
-                animations[playerAction][aniIndex],
-                (int)(hitbox.x - xDrawOffset),
-                (int)(hitbox.y - yDrawOffset),
-                (int)(45 * SCALE),
-                (int)(45 * SCALE),
-                null
-        );
+        g.drawImage(animations[playerAction][aniIndex], (int)(hitbox.x - xDrawOffset) - levelOffset, (int)(hitbox.y - yDrawOffset), (int)(45 * SCALE), (int)(45 * SCALE), null);
         drawHitBox(g,lvlOffSet);
-
 
         if (currentLaser != null) {
             currentLaser.draw(g);
@@ -271,8 +265,12 @@ public class Player extends Entity{
 
         if(jump)
             jump();
-        if (!left && !right && !inAir)
-            return; // No input, no movement
+//        if (!left && !right && !inAir)
+//            return; // No input, no movement
+
+        if(!inAir)
+            if((!left && !right) || (right && left))
+                return;
 
         float xSpeed = 0;
 
