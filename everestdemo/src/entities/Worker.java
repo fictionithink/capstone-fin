@@ -31,7 +31,6 @@ public class Worker extends Enemy {
             // Movement logic
             switch (enemyState) {
                 case IDLE:
-                    System.out.println("Enemy state is IDLE, switching to RUNNING");
                     newState(RUNNING);
                     break;
 

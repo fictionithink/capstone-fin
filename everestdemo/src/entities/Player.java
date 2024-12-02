@@ -212,7 +212,7 @@ public class Player extends Entity{
         Graphics2D g2d = (Graphics2D) g;
         drawArm(g2d);
         g.drawImage(animations[playerAction][aniIndex], (int)(hitbox.x - xDrawOffset) - levelOffset, (int)(hitbox.y - yDrawOffset), (int)(45 * SCALE), (int)(45 * SCALE), null);
-        drawHitBox(g,lvlOffSet);
+        drawHitBox(g,levelOffset);
 
         if (currentLaser != null) {
             currentLaser.draw(g);

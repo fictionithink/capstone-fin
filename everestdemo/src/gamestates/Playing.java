@@ -48,26 +48,10 @@ public class Playing extends State implements Statemethods{
 
     @Override
     public void update() {
-        levelManager.update();
-        player.update();
-        enemyManager.update(levelManager.getCurrentLevel().getLvlData(),player);
-    }
-
-    @Override
-    public void draw(Graphics g) {
-            levelManager.draw(g);
-            player.render(g,xLvlOffset);
-            enemyManager.draw(g,xLvlOffset);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            player.setAttacking(true); // Ensure this is called
-        }
         if (!paused) {
             levelManager.update();
             player.update();
+            enemyManager.update(levelManager.getCurrentLevel().getLvlData(),player);
             checkCloseToBorder();
         } else
             pauseOverlay.update();
@@ -93,6 +77,7 @@ public class Playing extends State implements Statemethods{
     public void draw(Graphics g) {
         levelManager.draw(g, xLevelOffset);
         player.render(g, xLevelOffset);
+        enemyManager.draw(g,xLvlOffset);
 
         if (paused) {
             g.setColor(new Color(0,0,0, 150));

@@ -52,13 +52,10 @@ public abstract class Enemy extends Entity {
         if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
             if (isFloor(hitbox, xSpeed, lvlData)) {
                 hitbox.x += xSpeed;
-                System.out.println("Enemy moved to x=" + hitbox.x + " y=" + hitbox.y);
             } else {
-                System.out.println("No floor ahead, changing direction.");
                 changeWalkDir();
             }
         } else {
-            System.out.println("Collision detected, changing direction.");
             changeWalkDir();
         }
     }
@@ -118,7 +115,6 @@ public abstract class Enemy extends Entity {
 
     protected void changeWalkDir() {
         walkDir = (walkDir == LEFT) ? RIGHT : LEFT;
-        System.out.println("Direction changed to: " + (walkDir == LEFT ? "LEFT" : "RIGHT"));
     }
 
     public int getAniIndex() {
