@@ -52,6 +52,27 @@ public class Player extends Entity{
 
     private GamePanel gamePanel;
 
+    //healthbar UI
+    private BufferedImage statusBarImg;
+    private BufferedImage fullHealthImg;
+
+    private int statusBarWidth = (int) (192 * Game.SCALE);
+    private int statusBarHeight = (int) (58 * Game.SCALE);
+    private int statusBarX = (int) (10 * Game.SCALE);
+    private int statusBarY = (int) (10 * Game.SCALE);
+
+    private int healthBarWidth = (int) (192 * Game.SCALE);
+    private int healthBarHeight = (int) (58 * Game.SCALE);
+    private int healthBarXStart = (int) (10 * Game.SCALE);
+    private int healthBarYStart = (int) (10 * Game.SCALE);
+
+    private int maxHealth = 100;
+    private int currentHealth=maxHealth;
+    private int healthWidth=healthBarWidth;
+
+    private int flipX=0;
+    private int flipW=1;
+
     public Player(float x, float y, int width, int height, Game game) {
         super(x, y, width, height);
         this.gamePanel = game.getGamePanel(); // Retrieve GamePanel from Game
@@ -105,7 +126,6 @@ public class Player extends Entity{
         float xOffset = hitbox.width / 2 - arm.width / 2;
         float yOffset = -7 * SCALE;
 
-        // Adjust arm position based on the player's current animation or action
         switch (playerAction) {
             case PUNCHING:
             case IDLE:
@@ -150,14 +170,7 @@ public class Player extends Entity{
 
         g.rotate(gunAngle);
 
-        g.drawImage(
-                armSprite,
-                -(int) arm.width / 2,
-                -(int) arm.height / 2,
-                (int) arm.width,
-                (int) arm.height,
-                null
-        );
+        g.drawImage(armSprite, -((int) arm.width / 2), -((int) arm.height / 2), (int) arm.width, (int) arm.height, null);
 
         // Restore the original transformation
         g.setTransform(originalTransform);
@@ -187,6 +200,7 @@ public class Player extends Entity{
 
 
     public void update() {
+        updateHealthBar();
         updatePos();
         updateAnimationTick();
         setAnimation();
@@ -208,18 +222,33 @@ public class Player extends Entity{
         }
     }
 
+    private void updateHealthBar() {
+        healthWidth =(int) (currentHealth/(float)maxHealth)*healthBarWidth;
+    }
+
     public void render(Graphics g, int levelOffset) {
         Graphics2D g2d = (Graphics2D) g;
         drawArm(g2d);
-        g.drawImage(animations[playerAction][aniIndex], (int)(hitbox.x - xDrawOffset) - levelOffset, (int)(hitbox.y - yDrawOffset), (int)(45 * SCALE), (int)(45 * SCALE), null);
+        g.drawImage(
+                animations[playerAction][aniIndex],
+                (int)(hitbox.x - xDrawOffset)- levelOffset+ flipX,
+                (int)(hitbox.y - yDrawOffset),
+                (int)(45 * SCALE) * flipW,
+                (int)(45 * SCALE),
+                null
+        );
         drawHitBox(g,levelOffset);
 
         if (currentLaser != null) {
             currentLaser.draw(g);
         }
-
+        drawUI(g);
     }
 
+    private void drawUI(Graphics g) {
+        g.drawImage(statusBarImg,statusBarX,statusBarY,statusBarWidth,statusBarHeight,null);
+        g.drawImage(fullHealthImg,statusBarX,statusBarY,statusBarWidth,statusBarHeight,null);
+    }
 
     private void updateAnimationTick() {
         aniTick++;
@@ -274,11 +303,15 @@ public class Player extends Entity{
 
         float xSpeed = 0;
 
-        if (left)
+        if (left) {
             xSpeed -= playerSpeed;
-        if (right)
+            flipX=(int) hitbox.width;
+            flipW=-1;
+        }if (right) {
             xSpeed += playerSpeed;
-        if(!inAir)
+            flipX = 0;
+            flipW = 1;
+        }if(!inAir)
             if(!IsEntityOnFloor(hitbox, lvlData))
                 inAir = true;
 
@@ -338,6 +371,8 @@ public class Player extends Entity{
                     animations[j][i] = img.getSubimage(i*48, j * 48, 48, 48);
                 }
             }
+        statusBarImg = LoadSave.getSpriteAtlas(LoadSave.STATUS_BAR_EMPTY);
+        fullHealthImg=LoadSave.getSpriteAtlas(LoadSave.STATUS_BAR_FULL);
     }
 
     public void LoadLvlData(int[][] lvlData) {
