@@ -21,14 +21,14 @@ public class Menu extends State implements Statemethods{
         return isInitialized;
     }
 
-    private boolean isInitialized = false;  // Flag to track if menu is initialized
+    private boolean isInitialized = false;
 
     public Menu(Game game) {
         super(game);
         System.out.println("Menu constructor called.");
         loadButtons();
         loadBackground();
-        isInitialized = true;  // Mark as initialized after the menu and buttons are loaded
+        isInitialized = true;
     }
 
     private void loadBackground() {
@@ -51,7 +51,7 @@ public class Menu extends State implements Statemethods{
 
     @Override
     public void update() {
-        if (isInitialized) {  // Only update menu if it is initialized
+        if (isInitialized) {
             for (MenuButton mb : buttons)
                 mb.update();
         }
@@ -59,7 +59,7 @@ public class Menu extends State implements Statemethods{
 
     @Override
     public void draw(Graphics g) {
-        if (isInitialized) {  // Only draw menu if it is initialized
+        if (isInitialized) {
             g.drawImage(backgroundImg, 0, 0, GAME_WIDTH, GAME_HEIGHT, null);
             g.drawImage(backgroundTitle, 0, menuY, GAME_WIDTH, GAME_HEIGHT, null);
 
@@ -78,9 +78,9 @@ public class Menu extends State implements Statemethods{
     @Override
     public void mousePressed(MouseEvent e) {
         for (MenuButton mb : buttons) {
-            if (isIn(e, mb)) {  // Check if the mouse is over a button
-                mb.setMousePressed(true);  // Set this button as pressed
-                break;  // Exit the loop once the button is pressed
+            if (isIn(e, mb)) {
+                mb.setMousePressed(true);
+                break;
             }
         }
     }
@@ -106,14 +106,14 @@ public class Menu extends State implements Statemethods{
     @Override
     public void mouseMoved(MouseEvent e) {
         for(MenuButton mb : buttons) {
-            mb.setMouseOver(false);  // Reset the state for each button
+            mb.setMouseOver(false);
         }
 
         // Check all buttons for hover
         for(MenuButton mb : buttons) {
-            if (isIn(e, mb)) {  // Check if mouse is over the button
-                mb.setMouseOver(true);  // Set to true for the button the mouse is hovering over
-                break;  // Stop the loop once the mouse is over a button
+            if (isIn(e, mb)) {
+                mb.setMouseOver(true);
+                break;
             }
         }
     }

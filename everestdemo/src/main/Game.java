@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class Game implements Runnable{
 
-//// Fields
+// Fields
     private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread gameThread;
@@ -32,7 +32,7 @@ public class Game implements Runnable{
     private boolean initialized = false;
     private boolean isFirstRender = true; // Flag to track the first render cycle
 
-//// Constructor (Game)
+// Constructor (Game)
     public Game() {
         System.out.println("Initializing GamePanel...");
         gamePanel = new GamePanel(this);
@@ -65,7 +65,7 @@ public class Game implements Runnable{
 
     private void initClasses() {
         System.out.println("Initializing Menu...");
-        menu = new Menu(this); // Ensure this is done properly
+        menu = new Menu(this);
         System.out.println("Menu initialized: " + (menu != null));
 
         playing = new Playing(this, gamePanel);
@@ -95,15 +95,14 @@ public class Game implements Runnable{
     }
 
     public void render(Graphics g) {
-        // Delay first render cycle until everything is properly initialized
         if (isFirstRender) {
-            // Wait until the menu is initialized before accessing it
             if (menu == null || !menu.isInitialized()) {
-                return; // Skip rendering if the menu isn't initialized
+                return;
             }
-            isFirstRender = false;  // Set the flag to prevent skipping future render cycles
+            isFirstRender = false;
 
-            // Enable mouse input after the first render
+            // this statement above is to stop sys_err messages na unecessary, because once ma fully loaded ang game nothing happens
+
             gamePanel.enableMouseInputAfterRender();
         }
 
