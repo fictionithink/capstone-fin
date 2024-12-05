@@ -138,7 +138,7 @@ public class Playing extends State implements Statemethods{
 
         int button = e.getButton();
         if (button == MouseEvent.BUTTON1) { // Left-click
-            player.setAttacking(true); // Ensure this is called
+            player.setAttacking(true);
         } else if (button == MouseEvent.BUTTON3) { // Right-click
             getPlayer().shootLaser();
         }
