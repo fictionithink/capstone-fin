@@ -85,13 +85,12 @@ public class Player extends Entity{
     }
 
     public void shootLaser() {
-        // Starting position of the laser (center of the player's arm)
+
         if(!canShoot) return;
 
         float startX = arm.x + arm.width / 2;
         float startY = arm.y + arm.height / 2;
 
-        // Create the laser
         currentLaser = new LaserBeam(startX, startY, gunAngle);
         laserStartTime = System.currentTimeMillis();
         canShoot=false;
@@ -109,15 +108,12 @@ public class Player extends Entity{
             return;
         }
 
-        // Get mouse coordinates
         float mouseX = gamePanel.getMouseX();
         float mouseY = gamePanel.getMouseY();
 
-        // Calculate distance from arm pivot to mouse
         float xDistance = mouseX - (arm.x + arm.width / 2);
         float yDistance = mouseY - (arm.y + arm.height / 2);
 
-        // Calculate angle in radians
         gunAngle = (float) Math.atan2(yDistance, xDistance);
 
     }
@@ -151,19 +147,15 @@ public class Player extends Entity{
                 break;
         }
 
-        // Adjust arm position to account for the level offset
         arm.x = hitbox.x + xOffset - gamePanel.getGame().getPlaying().getXLevelOffset();
         arm.y = hitbox.y + yOffset;
     }
 
 
     private void drawArm(Graphics2D g) {
-        // Save the original transformation
         AffineTransform originalTransform = g.getTransform();
 
-
-        // Translate to the arm's pivot point (center of the arm)
-        float pivotX = arm.x + arm.width / 2; // Center of the arm
+        float pivotX = arm.x + arm.width / 2;
         float pivotY = arm.y + arm.height / 2;
         g.translate(pivotX, pivotY);
 
@@ -172,23 +164,10 @@ public class Player extends Entity{
 
         g.drawImage(armSprite, -((int) arm.width / 2), -((int) arm.height / 2), (int) arm.width, (int) arm.height, null);
 
-        // Restore the original transformation
         g.setTransform(originalTransform);
 
-        // Draw a debug line from the arm's center to show the direction of the mouse
         g.setColor(Color.RED);
-
-
-        int lineLength = 200; // Length of the line in pixels
-        g.drawLine(
-                (int) pivotX,
-                (int) pivotY,
-                (int) (pivotX + Math.cos(gunAngle) * lineLength),
-                (int) (pivotY + Math.sin(gunAngle) * lineLength)
-        );
-
         // Optional: Debug line directly to the mouse position
-        g.setColor(Color.BLUE);
         g.drawLine(
                 (int) pivotX,
                 (int) pivotY,
@@ -204,8 +183,8 @@ public class Player extends Entity{
         updatePos();
         updateAnimationTick();
         setAnimation();
-        updateArmPosition(); // Update the arm's visual position
-        updateArmRotation(); // Update the arm rotation
+        updateArmPosition();
+        updateArmRotation();
 
         if (currentLaser != null) {
             currentLaser.update();
@@ -294,8 +273,6 @@ public class Player extends Entity{
 
         if(jump)
             jump();
-//        if (!left && !right && !inAir)
-//            return; // No input, no movement
 
         if(!inAir)
             if((!left && !right) || (right && left))
