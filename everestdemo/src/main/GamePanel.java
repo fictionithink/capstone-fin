@@ -75,6 +75,7 @@ public class GamePanel extends JPanel {
                 game.render(g);
             } catch (Exception e) {
                 System.err.println("Error during rendering: " + e.getMessage());
+                e.printStackTrace(); // Print the stack trace for more details
             }
         } else {
             System.err.println("Error: 'game' is null in GamePanel.paintComponent()");

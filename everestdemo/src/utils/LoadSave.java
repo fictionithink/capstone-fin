@@ -15,9 +15,15 @@ public class LoadSave {
 
     public static final String PLAYER_ATLAS = "Cyborg_Spritesheet.png";
     public static final String LEVEL_ATLAS = "IndustrialTile_0.png";
+    public static final String CLOUD_1 = "CloudBackground1.png";
+    public static final String CLOUD_2 = "CloudBackground2.png";
+    public static final String CLOUD_3 = "CloudBackground3.png";
+    public static final String CLOUD_4 = "CloudBackground4.png";
+    public static final String MENU_BACKGROUND_IMG = "PurpleSkyBackground.png";
 //    public static final String LEVEL_1_DATA = "level_1_data.png";
     public static final String LEVEL_1_DATA = "level_1_data_long.png";
     public static final String CYBER_ARM = "cyber_arm.png";
+    public static final String CAT_PIXEL = "Cat Sprite Sheet.png";
     public static final String MENU_BUTTONS = "menu_atlas.png";
     public static final String MENU_BACKGROUND = "citiciti.jpg";
     public static final String ENEMY_WORKER_LEFT = "man_left_spritesheet.png";

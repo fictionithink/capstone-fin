@@ -41,7 +41,7 @@ public class Playing extends State implements Statemethods{
         levelManager = new LevelManager(game);
 
         enemyManager = new EnemyManager(this);
-        player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game);
+        player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game, this);
         player.LoadLvlData(levelManager.getCurrentLevel().getLvlData());
         pauseOverlay = new PauseOverlay(this);
     }
@@ -56,6 +56,8 @@ public class Playing extends State implements Statemethods{
         } else
             pauseOverlay.update();
     }
+
+
 
     private void checkCloseToBorder() {
         int playerX = (int) player.getHitbox().x;
@@ -119,12 +121,10 @@ public class Playing extends State implements Statemethods{
         }
     }
 
-    @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1)
             player.setAttacking(true); // Ensure this is called
     }
-
 
     public void mouseDragged(MouseEvent e) {
         if (paused)
