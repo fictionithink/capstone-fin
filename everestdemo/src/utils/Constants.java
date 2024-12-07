@@ -4,6 +4,23 @@ import main.Game;
 
 public class Constants {
 
+    public static class Environments {
+        public static final int TREES_WIDTH_DEFAULT = 576;
+        public static final int TREES_HEIGHT_DEFAULT = 324;
+        public static final int TREES_WIDTH = (int)(TREES_WIDTH_DEFAULT * Game.SCALE);
+        public static final int TREES_HEIGHT = (int)(TREES_HEIGHT_DEFAULT * Game.SCALE);
+
+        public static final int CITYNEAR_WIDTH_DEFAULT = 576;
+        public static final int CITYNEAR_HEIGHT_DEFAULT = 324;
+        public static final int CITYNEAR_WIDTH = (int)(CITYNEAR_WIDTH_DEFAULT * Game.SCALE);
+        public static final int CITYNEAR_HEIGHT = (int)(CITYNEAR_HEIGHT_DEFAULT * Game.SCALE);
+
+        public static final int CITYFAR_WIDTH_DEFAULT = 576;
+        public static final int CITYFAR_HEIGHT_DEFAULT = 324;
+        public static final int CITYFAR_WIDTH = (int)(CITYFAR_WIDTH_DEFAULT * Game.SCALE);
+        public static final int CITYFAR_HEIGHT = (int)(CITYFAR_HEIGHT_DEFAULT * Game.SCALE);
+    }
+
     public static class EnemyConstants{
         public static final int WORKER = 0;
 
