@@ -1,5 +1,6 @@
 package entities;
 
+import gamestates.Gamestate;
 import gamestates.Playing;
 import gamestates.State;
 import main.Game;
@@ -30,7 +31,7 @@ public class Player extends Entity{
     private int aniTick, aniIndex, aniSpeed = 25;
 
     private int playerAction = IDLE;
-//    private int playerDir = -1;
+    //    private int playerDir = -1;
     private boolean moving = false, attacking = false;
     private boolean left, up, right, down, jump;
     private float playerSpeed = 1.1f * SCALE;
@@ -74,13 +75,12 @@ public class Player extends Entity{
     private int healthBarYStart = (int) (10 * Game.SCALE);
 
     private int maxHealth = 100;
-    private int currentHealth = 40;
-    private int healthWidth = healthBarWidth;
+    private int currentHealth=100;
+    private int healthWidth=healthBarWidth;
 
     private int flipX=0;
     private int flipW=1;
-
-    public Player(float x, float y, int width, int height, Game game, Playing playing) {
+    public Player(float x, float y, int width, int height, Game game,Playing playing) {
         super(x, y, width, height);
         this.playing = playing;
         this.gamePanel = game.getGamePanel(); // Retrieve GamePanel from Game
@@ -92,19 +92,14 @@ public class Player extends Entity{
     }
 
     public void shootLaser() {
-        // Starting position of the laser (center of the player's arm)
-        if(!canShoot) return;
-
+        if (!canShoot) return;
         float startX = arm.x + arm.width / 2;
         float startY = arm.y + arm.height / 2;
 
-        // Create the laser
-
-        currentLaser = new LaserBeam(startX, startY, gunAngle);
+        currentLaser = new LaserBeam(startX-8, startY-8, gunAngle,lvlData);
         laserStartTime = System.currentTimeMillis();
-        canShoot=false;
+        canShoot = false;
     }
-
 
     private void initArm() {
 
@@ -112,6 +107,11 @@ public class Player extends Entity{
     }
 
     private void updateArmRotation() {
+        if (gamePanel == null) {
+            System.err.println("GamePanel is null! Unable to update arm rotation.");
+            return;
+        }
+
         // Get mouse coordinates
         float mouseX = gamePanel.getMouseX();
         float mouseY = gamePanel.getMouseY();
@@ -172,7 +172,11 @@ public class Player extends Entity{
 
         g.rotate(gunAngle);
 
-        g.drawImage(armSprite, -((int) arm.width / 2), -((int) arm.height / 2), (int) arm.width, (int) arm.height, null);
+        g.drawImage(armSprite,
+                -((int) arm.width / 2) + flipX,
+                -((int) arm.height / 2),
+                (int) arm.width * flipW,
+                (int) arm.height, null);
 
         // Restore the original transformation
         g.setTransform(originalTransform);
@@ -202,8 +206,15 @@ public class Player extends Entity{
 
 
     public void update() {
+        if(currentHealth <= 0){
+            playing.setGameOVer(true);
+            return;
+        }
         updateHealthBar();
         updatePos();
+        if(attacking){
+
+        }
         updateAnimationTick();
         setAnimation();
         updateArmPosition(); // Update the arm's visual position
@@ -233,7 +244,7 @@ public class Player extends Entity{
     }
 
     private void updateHealthBar() {
-        healthWidth =(int) (currentHealth/(float)maxHealth)*healthBarWidth;
+        healthWidth =(int)((currentHealth/(float)maxHealth)*healthBarWidth);
     }
 
     public void render(Graphics g, int levelOffset) {
@@ -241,10 +252,10 @@ public class Player extends Entity{
         drawArm(g2d);
         g.drawImage(
                 animations[playerAction][aniIndex],
-                (int)(hitbox.x - xDrawOffset)- levelOffset+ flipX,
-                (int)(hitbox.y - yDrawOffset),
-                (int)(45 * SCALE) * flipW,
-                (int)(45 * SCALE),
+                (int) (hitbox.x - xDrawOffset) - levelOffset + flipX,
+                (int) (hitbox.y - yDrawOffset),
+                (int) (45 * SCALE) * flipW,
+                (int) (45 * SCALE),
                 null
         );
         drawHitBox(g,levelOffset);
@@ -255,9 +266,21 @@ public class Player extends Entity{
         drawUI(g);
     }
 
+    public void changeHealth(int value){
+        currentHealth+=value;
+
+        if(currentHealth<=0){
+            currentHealth=0;
+            playing.setGameOVer(true);
+            //gameOver();
+        }else if(currentHealth >= maxHealth){
+            currentHealth=maxHealth;
+        }
+    }
+
     private void drawUI(Graphics g) {
         g.drawImage(statusBarImg,statusBarX,statusBarY,statusBarWidth,statusBarHeight,null);
-        g.drawImage(fullHealthImg,statusBarX,statusBarY,statusBarWidth,statusBarHeight,null);
+        g.drawImage(fullHealthImg,healthBarXStart,healthBarYStart,healthWidth,healthBarHeight,null);
     }
 
     private void updateAnimationTick() {
@@ -374,14 +397,14 @@ public class Player extends Entity{
 
     private void loadAnimations() {
 
-            BufferedImage img = LoadSave.getSpriteAtlas(LoadSave.PLAYER_ATLAS);
+        BufferedImage img = LoadSave.getSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
-            animations = new BufferedImage[9][8];
-            for(int j = 0; j < animations.length; j++){
-                for(int i = 0; i < animations[j].length; i++){
-                    animations[j][i] = img.getSubimage(i*48, j * 48, 48, 48);
-                }
+        animations = new BufferedImage[9][8];
+        for(int j = 0; j < animations.length; j++){
+            for(int i = 0; i < animations[j].length; i++){
+                animations[j][i] = img.getSubimage(i*48, j * 48, 48, 48);
             }
+        }
         statusBarImg = LoadSave.getSpriteAtlas(LoadSave.STATUS_BAR_EMPTY);
         fullHealthImg=LoadSave.getSpriteAtlas(LoadSave.STATUS_BAR_FULL);
     }
@@ -443,6 +466,9 @@ public class Player extends Entity{
         this.jump = jump;
     }
 
+    public LaserBeam getLaser() {
+        return currentLaser;
+    }
 
 
 }

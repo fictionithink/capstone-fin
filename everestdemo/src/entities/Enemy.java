@@ -1,8 +1,8 @@
 package entities;
 
-import audio.AudioPlayer;
-import gamestates.Playing;
 import main.Game;
+
+import java.awt.geom.Rectangle2D;
 
 import static utils.Constants.EnemyConstants.*;
 import static utils.HelpMethods.*;
@@ -20,16 +20,33 @@ public abstract class Enemy extends Entity {
     protected int aniTick, aniSpeed = 25;
     protected int tileY;
     protected float attackDistance=Game.TILES_SIZE;
-    protected Playing playing;
-
+    protected int maxHealth;
+    protected int currentHealth;
+    protected boolean active = true;
+    protected boolean attackedChecked;
 
     public Enemy(float x, float y, int width, int height, int enemyType) {
         super(x, y, width, height);
         this.enemyType = enemyType;
-        this.playing = playing;
         initHitbox(x, y, width, height);
+        maxHealth = getMaxHealth(enemyType);
+        currentHealth=maxHealth;
     }
 
+    public void hurt(int amount){
+        currentHealth-=amount;
+        if(currentHealth<=0)
+            newState(DEAD);
+        else
+            newState(HURT);
+    }
+
+    protected void checkEnemyHit(Rectangle2D.Float attackBox, Player player){
+        if(attackBox.intersects(player.hitbox)){
+            player.changeHealth(-GetEnemyDMG(enemyType));
+            attackedChecked=true;
+        }
+    }
     protected void firstUpdateCheck(int[][] lvlData) {
         if (!IsEntityOnFloor(hitbox, lvlData)) {
             inAir = true;
@@ -48,7 +65,6 @@ public abstract class Enemy extends Entity {
             tileY = (int) (hitbox.y / Game.TILES_SIZE);
         }
     }
-
 
     protected void move(int[][] lvlData) {
         float xSpeed = (walkDir == LEFT) ? -walkSpeed : walkSpeed;
@@ -107,19 +123,21 @@ public abstract class Enemy extends Entity {
             aniIndex++;
             if (aniIndex >= GetSpriteAmount(enemyType, enemyState)) {
                 aniIndex = 0;
-                if(enemyState == ATTACK)
-                    enemyState = IDLE;
+
+                switch (enemyState) {
+                    case ATTACK:
+                    case HURT:
+                        enemyState = IDLE;
+                        break;
+                    case DEAD:
+                        active = false;
+                        break;
+                }
+
             }
         }
     }
 
-    protected void attack(Player player) {
-        if (isPlayerCloseForAttack(player)) {
-            newState(ATTACK); // Change to attack state
-            // Play the attack sound
-            playing.getGame().getAudioPlayer().playSong(AudioPlayer.ENEMY_ATTACK);
-        }
-    }
 
     protected void changeWalkDir() {
         walkDir = (walkDir == LEFT) ? RIGHT : LEFT;
@@ -133,5 +151,21 @@ public abstract class Enemy extends Entity {
         return enemyState;
     }
 
+    public int flipX() {
+        if (walkDir == LEFT)
+            return (int)hitbox.width;
 
+        return 0;
+    }
+
+    public int flipW(){
+        if(walkDir == LEFT)
+            return -1;
+        else
+            return 1;
+
+    }
+    public boolean isActive(){
+        return active;
+    }
 }

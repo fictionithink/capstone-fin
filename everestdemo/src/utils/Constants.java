@@ -46,7 +46,7 @@ public class Constants {
                 case WORKER:
                     switch (enemy_state){
                         case IDLE:
-                                return 3;
+                            return 3;
                         case RUNNING:
                         case DEAD:
                         case ATTACK:
@@ -57,6 +57,24 @@ public class Constants {
             }
 
             return 0;
+        }
+
+        public static int getMaxHealth(int enemyType){
+            switch(enemyType){
+                case WORKER:
+                    return 10;
+                default:
+                    return 1;
+            }
+        }
+
+        public static int GetEnemyDMG(int enemyType){
+            switch(enemyType){
+                case WORKER:
+                    return 15;
+                default:
+                    return 1;
+            }
         }
     }
 
