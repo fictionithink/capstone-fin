@@ -1,13 +1,17 @@
 package entities;
 
+import gamestates.Playing;
+import gamestates.State;
 import main.Game;
 import main.GamePanel;
 import utils.LoadSave;
+import audio.AudioPlayer;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+
 
 import static main.Game.SCALE;
 import static utils.Constants.PlayerConstants.*;
@@ -19,6 +23,8 @@ public class Player extends Entity{
     private LaserBeam currentLaser;
     private long laserStartTime;
     private boolean canShoot= true;
+    private boolean isRunningSoundPlaying = false;
+    private AudioPlayer audioPlayer;
 
     private BufferedImage[][] animations;
     private int aniTick, aniIndex, aniSpeed = 25;
@@ -51,6 +57,7 @@ public class Player extends Entity{
     private BufferedImage armSprite;
 
     private GamePanel gamePanel;
+    private Playing playing;
 
     //healthbar UI
     private BufferedImage statusBarImg;
@@ -67,17 +74,17 @@ public class Player extends Entity{
     private int healthBarYStart = (int) (10 * Game.SCALE);
 
     private int maxHealth = 100;
-    private int currentHealth=maxHealth;
-    private int healthWidth=healthBarWidth;
+    private int currentHealth = 40;
+    private int healthWidth = healthBarWidth;
 
     private int flipX=0;
     private int flipW=1;
 
-    public Player(float x, float y, int width, int height, Game game) {
+    public Player(float x, float y, int width, int height, Game game, Playing playing) {
         super(x, y, width, height);
+        this.playing = playing;
         this.gamePanel = game.getGamePanel(); // Retrieve GamePanel from Game
         loadAnimations();
-        System.out.println("GamePanel reference in Player: " + this.gamePanel);
         initHitbox(x, y, (int)(21 * SCALE), (int)(28.5*SCALE));
         initArm(); // Initialize the arm
         loadArmSprite();
@@ -85,11 +92,13 @@ public class Player extends Entity{
     }
 
     public void shootLaser() {
-
+        // Starting position of the laser (center of the player's arm)
         if(!canShoot) return;
 
         float startX = arm.x + arm.width / 2;
         float startY = arm.y + arm.height / 2;
+
+        // Create the laser
 
         currentLaser = new LaserBeam(startX, startY, gunAngle);
         laserStartTime = System.currentTimeMillis();
@@ -103,19 +112,16 @@ public class Player extends Entity{
     }
 
     private void updateArmRotation() {
-        if (gamePanel == null) {
-            System.err.println("GamePanel is null! Unable to update arm rotation.");
-            return;
-        }
-
+        // Get mouse coordinates
         float mouseX = gamePanel.getMouseX();
         float mouseY = gamePanel.getMouseY();
 
+        // Calculate distance from arm pivot to mouse
         float xDistance = mouseX - (arm.x + arm.width / 2);
         float yDistance = mouseY - (arm.y + arm.height / 2);
 
+        // Calculate angle in radians
         gunAngle = (float) Math.atan2(yDistance, xDistance);
-
     }
 
     private void updateArmPosition() {
@@ -147,15 +153,19 @@ public class Player extends Entity{
                 break;
         }
 
+        // Adjust arm position to account for the level offset
         arm.x = hitbox.x + xOffset - gamePanel.getGame().getPlaying().getXLevelOffset();
         arm.y = hitbox.y + yOffset;
     }
 
 
     private void drawArm(Graphics2D g) {
+        // Save the original transformation
         AffineTransform originalTransform = g.getTransform();
 
-        float pivotX = arm.x + arm.width / 2;
+
+        // Translate to the arm's pivot point (center of the arm)
+        float pivotX = arm.x + arm.width / 2; // Center of the arm
         float pivotY = arm.y + arm.height / 2;
         g.translate(pivotX, pivotY);
 
@@ -164,10 +174,23 @@ public class Player extends Entity{
 
         g.drawImage(armSprite, -((int) arm.width / 2), -((int) arm.height / 2), (int) arm.width, (int) arm.height, null);
 
+        // Restore the original transformation
         g.setTransform(originalTransform);
 
+        // Draw a debug line from the arm's center to show the direction of the mouse
         g.setColor(Color.RED);
+
+
+        int lineLength = 200; // Length of the line in pixels
+        g.drawLine(
+                (int) pivotX,
+                (int) pivotY,
+                (int) (pivotX + Math.cos(gunAngle) * lineLength),
+                (int) (pivotY + Math.sin(gunAngle) * lineLength)
+        );
+
         // Optional: Debug line directly to the mouse position
+        g.setColor(Color.BLUE);
         g.drawLine(
                 (int) pivotX,
                 (int) pivotY,
@@ -183,8 +206,16 @@ public class Player extends Entity{
         updatePos();
         updateAnimationTick();
         setAnimation();
-        updateArmPosition();
-        updateArmRotation();
+        updateArmPosition(); // Update the arm's visual position
+        updateArmRotation(); // Update the arm rotation
+
+        if (moving && !isRunningSoundPlaying) {
+            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.RUNNING); // Replace with your running sound constant
+            isRunningSoundPlaying = true;
+        } else if (!moving && isRunningSoundPlaying) {
+            playing.getGame().getAudioPlayer().stopEffect(AudioPlayer.RUNNING); // Stop the sound
+            isRunningSoundPlaying = false;
+        }
 
         if (currentLaser != null) {
             currentLaser.update();
@@ -273,6 +304,8 @@ public class Player extends Entity{
 
         if(jump)
             jump();
+//        if (!left && !right && !inAir)
+//            return; // No input, no movement
 
         if(!inAir)
             if((!left && !right) || (right && left))
@@ -316,6 +349,7 @@ public class Player extends Entity{
     private void jump() {
         if(inAir)
             return;
+        playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
         inAir = true;
         airSpeed = jumpSpeed;
     }
@@ -366,6 +400,7 @@ public class Player extends Entity{
     }
 
     public void setAttacking(boolean attacking) {
+        playing.getGame().getAudioPlayer().playEffect(AudioPlayer.ATTACK_ONE);
         this.attacking = attacking;
 
     }

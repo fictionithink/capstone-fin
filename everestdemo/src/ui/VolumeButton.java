@@ -13,26 +13,30 @@ public class VolumeButton extends PauseButton {
     private int index = 0;
     private boolean mouseOver, mousePressed;
     private int buttonX, minX, maxX;
+    private float floatValue = 0;
+
 
     public VolumeButton(int x, int y, int width, int height) {
-        super(780 + width / 2, 570, VOLUME_WIDTH, height);
-        bounds.x -= VOLUME_WIDTH / 2;
-        
+        super(780 + width / 2, 570, VOLUME_WIDTH, height); // Center button
+        bounds.x -= VOLUME_WIDTH / 2; // Adjust bounds to match button's width
+
+        // Set slider's x and y based on red rectangle alignment
         this.x = 724; // Adjust x to position slider horizontally
         this.y = 580; // Adjust y to position slider vertically
         this.width = width;
 
+        // Initialize button position and movement boundaries
         buttonX = this.x + this.width / 2; // Center the button
         minX = this.x + VOLUME_WIDTH / 2;  // Set left boundary
         maxX = this.x + this.width - VOLUME_WIDTH / 2; // Set right boundary
 
-        // Dynamically set slider bounds for the button
+        // Dynamically set hitbox bounds for the button
         bounds.x = buttonX - VOLUME_WIDTH / 2;
         bounds.y = this.y;
-        bounds.width = VOLUME_WIDTH;
-        bounds.height = height;
+        bounds.width = VOLUME_WIDTH; // Match button width
+        bounds.height = height;      // Match button height
 
-        loadImgs();
+        loadImgs(); // Load slider and button images
     }
 
     private void loadImgs() {
@@ -45,6 +49,12 @@ public class VolumeButton extends PauseButton {
 
     }
 
+    private void updateFloatValue() {
+        float range = maxX - minX;
+        float value = buttonX - minX;
+        floatValue = value/range;
+    }
+
     public void update() {
         index = 0;
         if (mouseOver)
@@ -55,19 +65,23 @@ public class VolumeButton extends PauseButton {
     }
 
     public void draw(Graphics g) {
+// Draw slider background
         g.drawImage(slider, x, y, width, height, null);
 
+        // Draw draggable button (centered vertically on the slider)
         g.drawImage(imgs[index], buttonX - VOLUME_WIDTH / 2, y, VOLUME_WIDTH, height, null);
     }
 
     public void changeX(int x) {
+        // Ensure buttonX stays within the slider's boundaries
         if (x < minX)
             buttonX = minX;
         else if (x > maxX)
             buttonX = maxX;
         else
             buttonX = x;
-
+        updateFloatValue();
+        // Update hitbox dynamically to match button position
         bounds.x = buttonX - VOLUME_WIDTH / 2;
     }
 
@@ -90,5 +104,9 @@ public class VolumeButton extends PauseButton {
 
     public void setMousePressed(boolean mousePressed) {
         this.mousePressed = mousePressed;
+    }
+
+    public float getFloatValue() {
+        return floatValue;
     }
 }

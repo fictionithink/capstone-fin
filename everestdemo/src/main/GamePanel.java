@@ -23,9 +23,9 @@ public class GamePanel extends JPanel {
 
         setPanelSize();
         setFocusable(true);
-        addKeyListener(new KeyboardInputs(this));
+        addKeyListener(new KeyboardInputs(this));                               // naa ni ang keyboardInputs in another package named keyboardInputs para dili mag yagaw2
 
-        MouseInputs mouseInputs = new MouseInputs(this);
+        MouseInputs mouseInputs = new MouseInputs(this); // Pass GamePanel to MouseInputs
         addMouseListener(mouseInputs);
         addMouseMotionListener(mouseInputs);
     }
@@ -37,6 +37,8 @@ public class GamePanel extends JPanel {
     public boolean enableMouseInput() {
         return isReadyForInput;
     }
+
+///////// ▼ ▼ ▼ ---------------- GAME PANEL METHODS ---------------- ▼ ▼ ▼ /////////
 
     // for the window panel
     private void setPanelSize() {
@@ -73,6 +75,7 @@ public class GamePanel extends JPanel {
                 game.render(g);
             } catch (Exception e) {
                 System.err.println("Error during rendering: " + e.getMessage());
+                e.printStackTrace(); // Print the stack trace for more details
             }
         } else {
             System.err.println("Error: 'game' is null in GamePanel.paintComponent()");

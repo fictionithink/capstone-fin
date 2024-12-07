@@ -2,24 +2,30 @@ package main;
 
 // this class holds the entirety of the game
 
+import audio.AudioPlayer;
+import gamestates.GameOptions;
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
 import inputs.MouseInputs;
+import ui.AudioOptions;
 
 import java.awt.*;
 
 public class Game implements Runnable{
 
-// Fields
+//// Fields
     private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread gameThread;
     private final int FPS_SET = 120;
+    private GameOptions gameOptions;
     private final int UPS_SET = 200;
 
     private Playing playing;
     private Menu menu;
+    private AudioPlayer audioPlayer;
+    private AudioOptions audioOptions;
 
     public static final int TILES_DEFAULT_SIZE = 32;
     public static final float SCALE = 2.0f;
@@ -32,8 +38,9 @@ public class Game implements Runnable{
     private boolean initialized = false;
     private boolean isFirstRender = true; // Flag to track the first render cycle
 
-// Constructor (Game)
+//// Constructor (Game)
     public Game() {
+
         System.out.println("Initializing GamePanel...");
         gamePanel = new GamePanel(this);
         System.out.println("GamePanel reference in Game: " + gamePanel);
@@ -65,11 +72,15 @@ public class Game implements Runnable{
 
     private void initClasses() {
         System.out.println("Initializing Menu...");
-        menu = new Menu(this);
+        menu = new Menu(this); // Ensure this is done properly
         System.out.println("Menu initialized: " + (menu != null));
 
         playing = new Playing(this, gamePanel);
         System.out.println("Playing initialized: " + (playing != null));
+
+        audioPlayer = new AudioPlayer(this);
+        gameOptions = new GameOptions(this);
+        audioOptions = new AudioOptions(this);
     }
 
 
@@ -86,6 +97,8 @@ public class Game implements Runnable{
                 playing.update();
                 break;
             case OPTIONS:
+                gameOptions.update();
+                break;
             case ABOUT:
             case EXIT:
             default:
@@ -95,14 +108,15 @@ public class Game implements Runnable{
     }
 
     public void render(Graphics g) {
+        // Delay first render cycle until everything is properly initialized
         if (isFirstRender) {
+            // Wait until the menu is initialized before accessing it
             if (menu == null || !menu.isInitialized()) {
-                return;
+                return; // Skip rendering if the menu isn't initialized
             }
-            isFirstRender = false;
+            isFirstRender = false;  // Set the flag to prevent skipping future render cycles
 
-            // this statement above is to stop sys_err messages na unecessary, because once ma fully loaded ang game nothing happens
-
+            // Enable mouse input after the first render
             gamePanel.enableMouseInputAfterRender();
         }
 
@@ -119,6 +133,13 @@ public class Game implements Runnable{
                     playing.draw(g);
                 } else {
                     System.err.println("Error: 'playing' is null in Game.render()");
+                }
+                break;
+            case OPTIONS:
+                if (gameOptions != null) {
+                    gameOptions.draw(g);
+                } else {
+                    System.err.println("Error: 'options' is null in Game.render()");
                 }
                 break;
             default:
@@ -190,5 +211,16 @@ public class Game implements Runnable{
         return gamePanel;
     }
 
+    public AudioPlayer getAudioPlayer(){
+        return audioPlayer;
+    }
 
+    public GameOptions getGameOptions() {
+        return gameOptions;
+    }
+
+
+    public AudioOptions getAudioOptions() {
+        return audioOptions;
+    }
 }

@@ -1,5 +1,7 @@
 package entities;
 
+import audio.AudioPlayer;
+import gamestates.Playing;
 import main.Game;
 
 import static utils.Constants.EnemyConstants.*;
@@ -18,12 +20,13 @@ public abstract class Enemy extends Entity {
     protected int aniTick, aniSpeed = 25;
     protected int tileY;
     protected float attackDistance=Game.TILES_SIZE;
-
+    protected Playing playing;
 
 
     public Enemy(float x, float y, int width, int height, int enemyType) {
         super(x, y, width, height);
         this.enemyType = enemyType;
+        this.playing = playing;
         initHitbox(x, y, width, height);
     }
 
@@ -45,6 +48,7 @@ public abstract class Enemy extends Entity {
             tileY = (int) (hitbox.y / Game.TILES_SIZE);
         }
     }
+
 
     protected void move(int[][] lvlData) {
         float xSpeed = (walkDir == LEFT) ? -walkSpeed : walkSpeed;
@@ -109,9 +113,13 @@ public abstract class Enemy extends Entity {
         }
     }
 
-
-
-
+    protected void attack(Player player) {
+        if (isPlayerCloseForAttack(player)) {
+            newState(ATTACK); // Change to attack state
+            // Play the attack sound
+            playing.getGame().getAudioPlayer().playSong(AudioPlayer.ENEMY_ATTACK);
+        }
+    }
 
     protected void changeWalkDir() {
         walkDir = (walkDir == LEFT) ? RIGHT : LEFT;

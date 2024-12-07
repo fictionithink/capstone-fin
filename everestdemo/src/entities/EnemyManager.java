@@ -33,11 +33,12 @@ public class EnemyManager {
 
     private void drawWorker(Graphics g, int xLevelOffset) {
         for (Worker w : workers) {
-            int verticalOffset = (int)(17 * Game.SCALE);
+            // Add a vertical offset to align the worker sprite properly
+            int verticalOffset = (int)(17 * Game.SCALE); // Adjust the value to lift the sprite higher
 
             g.drawImage(workerArr[w.getEnemyState()][w.getAniIndex()],
                     (int) w.getHitbox().x - xLevelOffset,
-                    (int) w.getHitbox().y - verticalOffset,
+                    (int) w.getHitbox().y - verticalOffset, // Apply the vertical offset
                     WORKER_WIDTH,
                     WORKER_HEIGHT,
                     null);

@@ -11,10 +11,11 @@ import utils.LoadSave;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import static utils.Constants.Environments.*;
 
 public class Playing extends State implements Statemethods{
 
-    private int xLvlOffset;
     private Player player;
     private LevelManager levelManager;
     private EnemyManager enemyManager;
@@ -30,18 +31,27 @@ public class Playing extends State implements Statemethods{
     private int maxTilesOffset = levelTilesWide - Game.TILES_IN_WIDTH;
     private int maxLevelOffsetX = maxTilesOffset * Game.TILES_SIZE;
 
+    private BufferedImage backgroundImg, trees, citynear, cityfar, overlayImg;
+
+
 
     public Playing(Game game, GamePanel gamePanel) {
         super(game);
         this.gamePanel = gamePanel; // Set GamePanel reference
         initClasses();
+
+        backgroundImg = LoadSave.getSpriteAtlas(LoadSave.W1_BACKGROUND);
+        trees = LoadSave.getSpriteAtlas(LoadSave.W1_TREES);
+        citynear = LoadSave.getSpriteAtlas(LoadSave.W1_CITY_NEAR);
+        cityfar = LoadSave.getSpriteAtlas(LoadSave.W1_CITY_FAR);
+        overlayImg = LoadSave.getSpriteAtlas(LoadSave.W1_CITY_OVERLAY);
     }
 
     private void initClasses() {
         levelManager = new LevelManager(game);
 
         enemyManager = new EnemyManager(this);
-        player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game);
+        player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game, this);
         player.LoadLvlData(levelManager.getCurrentLevel().getLvlData());
         pauseOverlay = new PauseOverlay(this);
     }
@@ -56,6 +66,8 @@ public class Playing extends State implements Statemethods{
         } else
             pauseOverlay.update();
     }
+
+
 
     private void checkCloseToBorder() {
         int playerX = (int) player.getHitbox().x;
@@ -75,9 +87,22 @@ public class Playing extends State implements Statemethods{
 
     @Override
     public void draw(Graphics g) {
+        g.drawImage(backgroundImg, 0, 0,Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+
+        drawCity(g);
+        drawTrees(g);
+
+        Graphics2D g2d = (Graphics2D) g;
+        Composite originalComposite = g2d.getComposite(); // Save the original composite
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)); // Set alpha to 30%
+        g2d.drawImage(overlayImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+        g2d.setComposite(originalComposite); // Restore the original composite
+
         levelManager.draw(g, xLevelOffset);
         player.render(g, xLevelOffset);
-        enemyManager.draw(g,xLvlOffset);
+        enemyManager.draw(g,xLevelOffset);
+
+
 
         if (paused) {
             g.setColor(new Color(0,0,0, 150));
@@ -85,6 +110,24 @@ public class Playing extends State implements Statemethods{
             pauseOverlay.draw(g);
         }
     }
+
+    private void drawCity(Graphics g) {
+        for(int i = 0; i < 5; i++) {
+            g.drawImage(citynear, i * CITYNEAR_WIDTH - (int)(xLevelOffset * 0.1), (int) (75 * Game.SCALE) - 250, CITYNEAR_WIDTH+200, CITYNEAR_HEIGHT+200, null);
+        }
+
+        for(int i = 0; i < 5; i++) {
+            g.drawImage(cityfar, i * CITYFAR_WIDTH - (int)(xLevelOffset * 0.2), (int) (85 * Game.SCALE)- 250, CITYFAR_WIDTH+200, CITYFAR_HEIGHT+200, null);
+        }
+    }
+
+    private void drawTrees(Graphics g) {
+        for(int i = 0; i < 5; i++) {
+            g.drawImage(trees, i * TREES_WIDTH- (int)(xLevelOffset * 0.3), (int) (65 * Game.SCALE) - 200, TREES_WIDTH+200, TREES_HEIGHT+200, null);
+        }
+    }
+
+
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -119,12 +162,10 @@ public class Playing extends State implements Statemethods{
         }
     }
 
-    @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1)
             player.setAttacking(true); // Ensure this is called
     }
-
 
     public void mouseDragged(MouseEvent e) {
         if (paused)
@@ -138,7 +179,7 @@ public class Playing extends State implements Statemethods{
 
         int button = e.getButton();
         if (button == MouseEvent.BUTTON1) { // Left-click
-            player.setAttacking(true);
+            player.setAttacking(true); // Ensure this is called
         } else if (button == MouseEvent.BUTTON3) { // Right-click
             getPlayer().shootLaser();
         }

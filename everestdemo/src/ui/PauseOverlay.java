@@ -1,5 +1,6 @@
 package ui;
 
+import audio.AudioPlayer;
 import gamestates.Gamestate;
 import gamestates.Playing;
 import main.Game;
@@ -123,6 +124,8 @@ public class PauseOverlay {
             if (menuB.isMousePressed()) {
                 Gamestate.state = Gamestate.MENU;
                 playing.unpauseGame();
+                playing.getGame().getAudioPlayer().stopSong(); // Stop the level music
+                playing.getGame().getAudioPlayer().playSong(AudioPlayer.MenuMusic); // Play the menu music
             }
         } else if (isIn(e, replayB)) {
             if (replayB.isMousePressed())
@@ -131,7 +134,6 @@ public class PauseOverlay {
             if (unpauseB.isMousePressed())
                 playing.unpauseGame();
         }
-
 
         musicButton.resetBools();
         sfxButton.resetBools();
