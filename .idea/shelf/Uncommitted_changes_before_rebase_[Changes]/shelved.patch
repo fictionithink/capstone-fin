@@ -1,0 +1,245 @@
+Index: everestdemo/src/utils/HelpMethods.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package utils;\r\n\r\nimport main.Game;\r\n\r\nimport java.awt.geom.Rectangle2D;\r\n\r\npublic class HelpMethods {\r\n\r\n    public static boolean CanMoveHere(float x, float y, float width, float height, int[][] lvlData) {\r\n        // Check all corners\r\n        if (!IsSolid(x, y, lvlData))\r\n            if (!IsSolid(x + width, y+height, lvlData))\r\n                if (!IsSolid(x+width, y, lvlData))\r\n                    if (!IsSolid(x, y + height, lvlData))\r\n                        return true;\r\n        return false;\r\n\r\n    }\r\n\r\n    private static boolean IsSolid(float x, float y, int[][] lvlData) {\r\n\r\n        int maxWidth = lvlData[0].length * Game.TILES_SIZE;\r\n\r\n        if (x < 0 || x >= maxWidth || y < 0 || y >= Game.GAME_HEIGHT) {\r\n            return true; // Out of bounds\r\n        }\r\n\r\n        float xIndex = x / Game.TILES_SIZE;\r\n        float yIndex = y / Game.TILES_SIZE;\r\n\r\n        return IsTileSolid((int)xIndex, (int)yIndex, lvlData);\r\n    }\r\n\r\n    public static boolean IsTileSolid(int xTile, int yTile, int[][] lvlData) {\r\n        int value = lvlData[yTile][xTile];\r\n\r\n        if (value < 0 || value >= 108 || (value != 97))\r\n            return true;\r\n        return false;\r\n    }\r\n\r\n    public static float GetEntityXPosNextToWall(Rectangle2D.Float hitbox, float xSpeed){\r\n\r\n        int currentTile = (int)(hitbox.x / Game.TILES_SIZE);\r\n\r\n        if(xSpeed > 0) {\r\n            int tileXPos = currentTile * Game.TILES_SIZE;\r\n            int xOffset = (int)(Game.TILES_SIZE - hitbox.width);\r\n            return tileXPos + xOffset - 1;\r\n        } else {\r\n            return currentTile * Game.TILES_SIZE;\r\n        }\r\n    }\r\n\r\n    public static float GetEntityYPosUnderRoofOrAboveFloor(Rectangle2D.Float hitbox, float airSpeed){\r\n        int currentTile = (int)(hitbox.y / Game.TILES_SIZE);\r\n\r\n        if(airSpeed > 0){\r\n            //falling - touching floor\r\n            int tileYPos = currentTile * Game.TILES_SIZE;\r\n            int yOffset = (int)(Game.TILES_SIZE - hitbox.height);\r\n            return tileYPos + yOffset - 1;\r\n        } else {\r\n            //jumping\r\n            return currentTile * Game.TILES_SIZE;\r\n        }\r\n    }\r\n\r\n    public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, int[][] lvlData){\r\n        if(!IsSolid(hitbox.x, hitbox.y + hitbox.height+1, lvlData))\r\n            if(!IsSolid(hitbox.x+ hitbox.width, hitbox.y + hitbox.height+1, lvlData))\r\n                return  false;\r\n        return true;\r\n    }\r\n\r\n    public static boolean isFloor(Rectangle2D.Float hitbox, float xSpeed,int[][] lvlData){\r\n        return IsSolid(hitbox.x+xSpeed,hitbox.y +hitbox.height + 1,lvlData);\r\n    }\r\n\r\n    public static boolean IsALlTileWalkable(int xStart, int xEnd, int y, int[][] lvlDAta){\r\n        for(int i =0;i<xEnd - xStart;i++) {\r\n            if (IsTileSolid(xStart, y, lvlDAta))\r\n                return false;\r\n            if (!IsTileSolid(xStart + i, y+1, lvlDAta))\r\n                return false;\r\n        }\r\n        return true;\r\n    }\r\n\r\n    public static boolean IsSightClear(int[][] lvlData,Rectangle2D.Float firstHitbox, Rectangle2D.Float secondHitbox,int yTile){\r\n        int firstXTile= (int)firstHitbox.x/ Game.TILES_SIZE;\r\n        int secondXTile= (int)secondHitbox.x/ Game.TILES_SIZE;\r\n\r\n        if(firstXTile >secondXTile)\r\n            return IsALlTileWalkable(secondXTile,firstXTile,yTile,lvlData);\r\n        else\r\n            return IsALlTileWalkable(firstXTile,secondXTile,yTile,lvlData);\r\n\r\n\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/everestdemo/src/utils/HelpMethods.java b/everestdemo/src/utils/HelpMethods.java
+--- a/everestdemo/src/utils/HelpMethods.java	(revision ba38124d1acfd9e4776c4ba5d28c13c9f36df255)
++++ b/everestdemo/src/utils/HelpMethods.java	(date 1733644558252)
+@@ -74,7 +74,10 @@
+     }
+ 
+     public static boolean isFloor(Rectangle2D.Float hitbox, float xSpeed,int[][] lvlData){
+-        return IsSolid(hitbox.x+xSpeed,hitbox.y +hitbox.height + 1,lvlData);
++        if(xSpeed > 0)
++            return IsSolid(hitbox.x+ hitbox.width,hitbox.y +hitbox.height + 1,lvlData);
++        else
++            return IsSolid(hitbox.x+xSpeed,hitbox.y +hitbox.height + 1,lvlData);
+     }
+ 
+     public static boolean IsALlTileWalkable(int xStart, int xEnd, int y, int[][] lvlDAta){
+Index: everestdemo/src/entities/Enemy.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package entities;\r\n\r\nimport main.Game;\r\n\r\nimport java.awt.geom.Rectangle2D;\r\n\r\nimport static utils.Constants.EnemyConstants.*;\r\nimport static utils.HelpMethods.*;\r\nimport static utils.Constants.Directions.*;\r\n\r\npublic abstract class Enemy extends Entity {\r\n\r\n    protected int walkDir = LEFT;\r\n    protected float walkSpeed = .6f * Game.SCALE;\r\n    protected float gravity = 0.04f * Game.SCALE;\r\n    protected boolean firstUpdate = true;\r\n    protected boolean inAir;\r\n    protected float fallSpeed;\r\n    protected int aniIndex, enemyState = IDLE, enemyType;\r\n    protected int aniTick, aniSpeed = 25;\r\n    protected int tileY;\r\n    protected float attackDistance=Game.TILES_SIZE;\r\n    protected int maxHealth;\r\n    protected int currentHealth;\r\n    protected boolean active = true;\r\n    protected boolean attackedChecked;\r\n\r\n    public Enemy(float x, float y, int width, int height, int enemyType) {\r\n        super(x, y, width, height);\r\n        this.enemyType = enemyType;\r\n        initHitbox(x, y, width, height);\r\n        maxHealth = getMaxHealth(enemyType);\r\n        currentHealth=maxHealth;\r\n    }\r\n\r\n    public void hurt(int amount){\r\n        currentHealth-=amount;\r\n        if(currentHealth<=0)\r\n            newState(DEAD);\r\n        else\r\n            newState(HURT);\r\n    }\r\n\r\n    protected void checkEnemyHit(Rectangle2D.Float attackBox, Player player){\r\n        if(attackBox.intersects(player.hitbox)){\r\n            player.changeHealth(-GetEnemyDMG(enemyType));\r\n            attackedChecked=true;\r\n        }\r\n    }\r\n    protected void firstUpdateCheck(int[][] lvlData) {\r\n        if (!IsEntityOnFloor(hitbox, lvlData)) {\r\n            inAir = true;\r\n        }\r\n        firstUpdate = false;\r\n    }\r\n\r\n    protected void updateInAir(int[][] lvlData){\r\n        // Handle falling\r\n        if (CanMoveHere(hitbox.x, hitbox.y + fallSpeed, hitbox.width, hitbox.height, lvlData)) {\r\n            hitbox.y += fallSpeed;\r\n            fallSpeed += gravity;\r\n        } else {\r\n            inAir = false;\r\n            hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, fallSpeed);\r\n            tileY = (int) (hitbox.y / Game.TILES_SIZE);\r\n        }\r\n    }\r\n\r\n    protected void move(int[][] lvlData) {\r\n        float xSpeed = (walkDir == LEFT) ? -walkSpeed : walkSpeed;\r\n\r\n        if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {\r\n            if (isFloor(hitbox, xSpeed, lvlData)) {\r\n                hitbox.x += xSpeed;\r\n            } else {\r\n                changeWalkDir();\r\n            }\r\n        } else {\r\n            changeWalkDir();\r\n        }\r\n    }\r\n\r\n    protected void turnTowardsPlayer(Player player){\r\n        if(player.hitbox.x> hitbox.x)\r\n            walkDir = RIGHT;\r\n        else\r\n            walkDir = LEFT;\r\n\r\n    }\r\n\r\n    protected boolean canSeePlayer(int[][] lvlData, Player player) {\r\n        int playerTileY =(int)player.getHitbox().y/Game.TILES_SIZE;\r\n\r\n        if(playerTileY == tileY)\r\n            if(isPlayerInRange(player)){\r\n                if(IsSightClear(lvlData,hitbox,player.hitbox,tileY))\r\n                    return true;\r\n            }\r\n\r\n        return false;\r\n    }\r\n\r\n    protected boolean isPlayerInRange(Player player) {\r\n        int absValue=(int)Math.abs(player.hitbox.x - hitbox.x);\r\n        return absValue <= attackDistance * 5;\r\n    }\r\n\r\n    protected boolean isPlayerCloseForAttack(Player player){\r\n        int absValue=(int)Math.abs(player.hitbox.x - hitbox.x);\r\n        return absValue <= attackDistance;\r\n    }\r\n\r\n    protected void newState(int enemyState){\r\n        this.enemyState=enemyState;\r\n        aniTick=0;\r\n        aniIndex=0;\r\n    }\r\n\r\n    protected void updateAnimationTick() {\r\n        aniTick++;\r\n        if (aniTick >= aniSpeed) {\r\n            aniTick = 0;\r\n            aniIndex++;\r\n            if (aniIndex >= GetSpriteAmount(enemyType, enemyState)) {\r\n                aniIndex = 0;\r\n\r\n                switch (enemyState) {\r\n                    case ATTACK:\r\n                    case HURT:\r\n                        enemyState = IDLE;\r\n                        break;\r\n                    case DEAD:\r\n                        active = false;\r\n                        break;\r\n                }\r\n\r\n            }\r\n        }\r\n    }\r\n\r\n\r\n    protected void changeWalkDir() {\r\n        walkDir = (walkDir == LEFT) ? RIGHT : LEFT;\r\n    }\r\n\r\n    public int getAniIndex() {\r\n        return aniIndex;\r\n    }\r\n\r\n    public int getEnemyState() {\r\n        return enemyState;\r\n    }\r\n\r\n    public int flipX() {\r\n        if (walkDir == LEFT)\r\n            return (int)hitbox.width;\r\n\r\n        return 0;\r\n    }\r\n\r\n    public int flipW(){\r\n        if(walkDir == LEFT)\r\n            return -1;\r\n        else\r\n            return 1;\r\n\r\n    }\r\n    public boolean isActive(){\r\n        return active;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/everestdemo/src/entities/Enemy.java b/everestdemo/src/entities/Enemy.java
+--- a/everestdemo/src/entities/Enemy.java	(revision ba38124d1acfd9e4776c4ba5d28c13c9f36df255)
++++ b/everestdemo/src/entities/Enemy.java	(date 1733644558315)
+@@ -34,6 +34,10 @@
+     }
+ 
+     public void hurt(int amount){
++        if(enemyState == DEAD){
++            return;
++        }
++
+         currentHealth-=amount;
+         if(currentHealth<=0)
+             newState(DEAD);
+Index: .idea/uiDesigner.xml
+===================================================================
+diff --git a/.idea/uiDesigner.xml b/.idea/uiDesigner.xml
+deleted file mode 100644
+--- a/.idea/uiDesigner.xml	(revision ba38124d1acfd9e4776c4ba5d28c13c9f36df255)
++++ /dev/null	(revision ba38124d1acfd9e4776c4ba5d28c13c9f36df255)
+@@ -1,124 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="Palette2">
+-    <group name="Swing">
+-      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.svg" removable="false" auto-create-binding="false" can-attach-label="false">
+-        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
+-      </item>
+-      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.svg" removable="false" auto-create-binding="false" can-attach-label="false">
+-        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
+-      </item>
+-      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.svg" removable="false" auto-create-binding="false" can-attach-label="false">
+-        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
+-      </item>
+-      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.svg" removable="false" auto-create-binding="false" can-attach-label="true">
+-        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
+-      </item>
+-      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.svg" removable="false" auto-create-binding="true" can-attach-label="false">
+-        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
+-        <initial-values>
+-          <property name="text" value="Button" />
+-        </initial-values>
+-      </item>
+-      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.svg" removable="false" auto-create-binding="true" can-attach-label="false">
+-        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
+-        <initial-values>
+-          <property name="text" value="RadioButton" />
+-        </initial-values>
+-      </item>
+-      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.svg" removable="false" auto-create-binding="true" can-attach-label="false">
+-        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
+-        <initial-values>
+-          <property name="text" value="CheckBox" />
+-        </initial-values>
+-      </item>
+-      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.svg" removable="false" auto-create-binding="false" can-attach-label="false">
+-        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
+-        <initial-values>
+-          <property name="text" value="Label" />
+-        </initial-values>
+-      </item>
+-      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
+-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+-          <preferred-size width="150" height="-1" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
+-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+-          <preferred-size width="150" height="-1" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
+-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+-          <preferred-size width="150" height="-1" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.svg" removable="false" auto-create-binding="true" can-attach-label="true">
+-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+-          <preferred-size width="150" height="50" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.svg" removable="false" auto-create-binding="true" can-attach-label="true">
+-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+-          <preferred-size width="150" height="50" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.svg" removable="false" auto-create-binding="true" can-attach-label="true">
+-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+-          <preferred-size width="150" height="50" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.svg" removable="false" auto-create-binding="true" can-attach-label="true">
+-        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
+-      </item>
+-      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.svg" removable="false" auto-create-binding="true" can-attach-label="false">
+-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+-          <preferred-size width="150" height="50" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.svg" removable="false" auto-create-binding="true" can-attach-label="false">
+-        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
+-          <preferred-size width="150" height="50" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.svg" removable="false" auto-create-binding="true" can-attach-label="false">
+-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+-          <preferred-size width="150" height="50" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.svg" removable="false" auto-create-binding="true" can-attach-label="false">
+-        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
+-          <preferred-size width="200" height="200" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.svg" removable="false" auto-create-binding="false" can-attach-label="false">
+-        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
+-          <preferred-size width="200" height="200" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.svg" removable="false" auto-create-binding="true" can-attach-label="true">
+-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
+-      </item>
+-      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.svg" removable="false" auto-create-binding="true" can-attach-label="false">
+-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
+-      </item>
+-      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.svg" removable="false" auto-create-binding="false" can-attach-label="false">
+-        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
+-      </item>
+-      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.svg" removable="false" auto-create-binding="true" can-attach-label="false">
+-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
+-      </item>
+-      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.svg" removable="false" auto-create-binding="false" can-attach-label="false">
+-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
+-          <preferred-size width="-1" height="20" />
+-        </default-constraints>
+-      </item>
+-      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.svg" removable="false" auto-create-binding="false" can-attach-label="false">
+-        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
+-      </item>
+-      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.svg" removable="false" auto-create-binding="true" can-attach-label="false">
+-        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
+-      </item>
+-    </group>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/.gitignore
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+deleted file mode 100644
+--- a/.idea/.gitignore	(revision ba38124d1acfd9e4776c4ba5d28c13c9f36df255)
++++ /dev/null	(revision ba38124d1acfd9e4776c4ba5d28c13c9f36df255)
+@@ -1,3 +0,0 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"VcsDirectoryMappings\">\r\n    <mapping directory=\"\" vcs=\"Git\" />\r\n    <mapping directory=\"$PROJECT_DIR$\" vcs=\"Git\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+--- a/.idea/vcs.xml	(revision ba38124d1acfd9e4776c4ba5d28c13c9f36df255)
++++ b/.idea/vcs.xml	(date 1733644436390)
+@@ -2,6 +2,5 @@
+ <project version="4">
+   <component name="VcsDirectoryMappings">
+     <mapping directory="" vcs="Git" />
+-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectModuleManager\">\r\n    <modules>\r\n      <module fileurl=\"file://$PROJECT_DIR$/capstone.iml\" filepath=\"$PROJECT_DIR$/capstone.iml\" />\r\n    </modules>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+--- a/.idea/modules.xml	(revision ba38124d1acfd9e4776c4ba5d28c13c9f36df255)
++++ b/.idea/modules.xml	(date 1733644436339)
+@@ -2,7 +2,7 @@
+ <project version="4">
+   <component name="ProjectModuleManager">
+     <modules>
+-      <module fileurl="file://$PROJECT_DIR$/capstone.iml" filepath="$PROJECT_DIR$/capstone.iml" />
++      <module fileurl="file://$PROJECT_DIR$/capstone-2.iml" filepath="$PROJECT_DIR$/capstone-2.iml" />
+     </modules>
+   </component>
+ </project>
+\ No newline at end of file
+Index: everestdemo/src/gamestates/Playing.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package gamestates;\r\n\r\nimport entities.EnemyManager;\r\nimport entities.Player;\r\nimport levels.LevelManager;\r\nimport main.Game;\r\nimport main.GamePanel;\r\nimport ui.GameOverOverlay;\r\nimport ui.PauseOverlay;\r\nimport utils.LoadSave;\r\n\r\nimport java.awt.*;\r\nimport java.awt.event.KeyEvent;\r\nimport java.awt.event.MouseEvent;\r\nimport java.awt.image.BufferedImage;\r\nimport static utils.Constants.Environments.*;\r\n\r\npublic class Playing extends State implements Statemethods{\r\n\r\n    private Player player;\r\n    private LevelManager levelManager;\r\n    private EnemyManager enemyManager;\r\n    private GamePanel gamePanel;\r\n    private GameOverOverlay gameOverOverlay;\r\n    private PauseOverlay pauseOverlay;\r\n    private boolean paused = false;\r\n\r\n    private int xLevelOffset;\r\n    private int leftBorder = (int) (0.4 * Game.GAME_WIDTH);\r\n    private int rightBorder = (int) (0.6 * Game.GAME_WIDTH);\r\n    private int levelTilesWide = LoadSave.GetLevelData()[0].length;\r\n    private int maxTilesOffset = levelTilesWide - Game.TILES_IN_WIDTH;\r\n    private int maxLevelOffsetX = maxTilesOffset * Game.TILES_SIZE;\r\n    private boolean gameOver;\r\n\r\n    private BufferedImage backgroundImg, trees, citynear, cityfar, overlayImg;\r\n\r\n\r\n    private BufferedImage backgroundImg, trees, citynear, cityfar, overlayImg;\r\n\r\n\r\n\r\n    public Playing(Game game, GamePanel gamePanel) {\r\n        super(game);\r\n        this.gamePanel = gamePanel; // Set GamePanel reference\r\n        initClasses();\r\n\r\n        backgroundImg = LoadSave.getSpriteAtlas(LoadSave.W1_BACKGROUND);\r\n        trees = LoadSave.getSpriteAtlas(LoadSave.W1_TREES);\r\n        citynear = LoadSave.getSpriteAtlas(LoadSave.W1_CITY_NEAR);\r\n        cityfar = LoadSave.getSpriteAtlas(LoadSave.W1_CITY_FAR);\r\n        overlayImg = LoadSave.getSpriteAtlas(LoadSave.W1_CITY_OVERLAY);\r\n    }\r\n\r\n    private void initClasses() {\r\n        levelManager = new LevelManager(game);\r\n\r\n        enemyManager = new EnemyManager(this);\r\n        player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game, this);\r\n        player.LoadLvlData(levelManager.getCurrentLevel().getLvlData());\r\n        pauseOverlay = new PauseOverlay(this);\r\n        gameOverOverlay = new GameOverOverlay(this);\r\n    }\r\n\r\n    @Override\r\n    public void update() {\r\n        if(gameOver){\r\n            return;\r\n        }\r\n\r\n        if (!paused) {\r\n            levelManager.update();\r\n            player.update();\r\n\r\n            // Check for laser collisions with workers\r\n            if (player.getLaser() != null) {\r\n                enemyManager.checkLaserHit(player.getLaser());\r\n            }\r\n\r\n            enemyManager.update(levelManager.getCurrentLevel().getLvlData(), player);\r\n            checkCloseToBorder();\r\n        } else {\r\n            pauseOverlay.update();\r\n        }\r\n    }\r\n\r\n\r\n\r\n    private void checkCloseToBorder() {\r\n        int playerX = (int) player.getHitbox().x;\r\n        int diff = playerX - xLevelOffset;\r\n\r\n        if (diff > rightBorder)\r\n            xLevelOffset += diff - rightBorder;\r\n        else if (diff < leftBorder)\r\n            xLevelOffset += diff - leftBorder;\r\n\r\n        if (xLevelOffset > maxLevelOffsetX)\r\n            xLevelOffset = maxLevelOffsetX;\r\n        else if (xLevelOffset < 0)\r\n            xLevelOffset = 0;\r\n\r\n    }\r\n\r\n    @Override\r\n    public void draw(Graphics g) {\r\n        g.drawImage(backgroundImg, 0, 0,Game.GAME_WIDTH, Game.GAME_HEIGHT, null);\r\n\r\n        drawCity(g);\r\n        drawTrees(g);\r\n\r\n        Graphics2D g2d = (Graphics2D) g;\r\n        Composite originalComposite = g2d.getComposite(); // Save the original composite\r\n        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)); // Set alpha to 30%\r\n        g2d.drawImage(overlayImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);\r\n        g2d.setComposite(originalComposite); // Restore the original composite\r\n\r\n        levelManager.draw(g, xLevelOffset);\r\n        player.render(g, xLevelOffset);\r\n        enemyManager.draw(g,xLevelOffset);\r\n\r\n\r\n\r\n        if (paused) {\r\n            g.setColor(new Color(0,0,0, 150));\r\n            g.fillRect(0,0,Game.GAME_WIDTH, Game.GAME_HEIGHT);\r\n            pauseOverlay.draw(g);\r\n        }else if(gameOver){\r\n            gameOverOverlay.draw(g);\r\n        }\r\n    }\r\n\r\n    private void drawCity(Graphics g) {\r\n        for(int i = 0; i < 5; i++) {\r\n            g.drawImage(citynear, i * CITYNEAR_WIDTH - (int)(xLevelOffset * 0.1), (int) (75 * Game.SCALE) - 250, CITYNEAR_WIDTH+200, CITYNEAR_HEIGHT+200, null);\r\n        }\r\n\r\n        for(int i = 0; i < 5; i++) {\r\n            g.drawImage(cityfar, i * CITYFAR_WIDTH - (int)(xLevelOffset * 0.2), (int) (85 * Game.SCALE)- 250, CITYFAR_WIDTH+200, CITYFAR_HEIGHT+200, null);\r\n        }\r\n    }\r\n\r\n    private void drawTrees(Graphics g) {\r\n        for(int i = 0; i < 5; i++) {\r\n            g.drawImage(trees, i * TREES_WIDTH- (int)(xLevelOffset * 0.3), (int) (65 * Game.SCALE) - 200, TREES_WIDTH+200, TREES_HEIGHT+200, null);\r\n        }\r\n    }\r\n\r\n\r\n\r\n    @Override\r\n    public void keyPressed(KeyEvent e) {\r\n        if(gameOver)\r\n            gameOverOverlay.KeyPressed(e);\r\n        else\r\n            switch (e.getKeyCode()){                        // reads inputs\r\n                case KeyEvent.VK_A:                         //VK_( A ) key\r\n                    player.setLeft(true);\r\n                    break;\r\n                case KeyEvent.VK_D:                         //VK_( D ) key\r\n                    player.setRight(true);\r\n                    break;\r\n                case KeyEvent.VK_SPACE:                         //VK_( Space bar ) key\r\n                    player.setJump(true);\r\n                    break;\r\n                case KeyEvent.VK_ESCAPE:\r\n                    paused = !paused;\r\n                    break;\r\n            }\r\n    }\r\n\r\n    @Override\r\n    public void keyReleased(KeyEvent e) {\r\n        if(!gameOver)\r\n            switch (e.getKeyCode()){                        // reads inputs\r\n                case KeyEvent.VK_A:                         //VK_( A ) key\r\n                    player.setLeft(false);\r\n                    break;\r\n                case KeyEvent.VK_D:                         //VK_( D ) key\r\n                    player.setRight(false);\r\n                    break;\r\n                case KeyEvent.VK_SPACE:                         //VK_( Space bar ) key\r\n                    player.setJump(false);\r\n                    break;\r\n            }\r\n    }\r\n\r\n    public void mouseClicked(MouseEvent e) {\r\n        if(!gameOver)\r\n            if (e.getButton() == MouseEvent.BUTTON1)\r\n                player.setAttacking(true); // Ensure this is called\r\n    }\r\n\r\n    public void mouseDragged(MouseEvent e) {\r\n        if(!gameOver)\r\n            if (paused)\r\n                pauseOverlay.mouseDragged(e);\r\n\r\n    }\r\n\r\n    public void mousePressed(MouseEvent e) {\r\n        if(!gameOver)\r\n            if (paused)\r\n                pauseOverlay.mousePressed(e);\r\n\r\n        int button = e.getButton();\r\n        if (button == MouseEvent.BUTTON1) { // Left-click\r\n            player.setAttacking(true); // Ensure this is called\r\n        } else if (button == MouseEvent.BUTTON3) { // Right-click\r\n            getPlayer().shootLaser();\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void mouseReleased(MouseEvent e) {\r\n        if (paused)\r\n            pauseOverlay.mouseReleased(e);\r\n\r\n    }\r\n\r\n    @Override\r\n    public void mouseMoved(MouseEvent e) {\r\n        if(paused)\r\n            pauseOverlay.mouseMoved(e);\r\n        else\r\n            gamePanel.setMouseCoordinates(e.getX(), e.getY());\r\n\r\n    }\r\n\r\n    public void windowFocusLost() {\r\n        player.resetDirBooleans();\r\n    }\r\n\r\n    public Player getPlayer() {\r\n        return player;\r\n    }\r\n\r\n    public void unpauseGame() {\r\n        paused = false;\r\n    }\r\n\r\n    public int getXLevelOffset() {\r\n        return xLevelOffset;\r\n    }\r\n\r\n    public void resetAll() {\r\n        player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game, this);\r\n        player.LoadLvlData(levelManager.getCurrentLevel().getLvlData());\r\n        enemyManager = new EnemyManager(this);\r\n        xLevelOffset = 0;\r\n        gameOver = false;\r\n    }\r\n\r\n\r\n    public void setGameOVer(boolean gameOver) {\r\n        this.gameOver = gameOver;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/everestdemo/src/gamestates/Playing.java b/everestdemo/src/gamestates/Playing.java
+--- a/everestdemo/src/gamestates/Playing.java	(revision ba38124d1acfd9e4776c4ba5d28c13c9f36df255)
++++ b/everestdemo/src/gamestates/Playing.java	(date 1733599138000)
+@@ -35,11 +35,6 @@
+ 
+     private BufferedImage backgroundImg, trees, citynear, cityfar, overlayImg;
+ 
+-
+-    private BufferedImage backgroundImg, trees, citynear, cityfar, overlayImg;
+-
+-
+-
+     public Playing(Game game, GamePanel gamePanel) {
+         super(game);
+         this.gamePanel = gamePanel; // Set GamePanel reference
