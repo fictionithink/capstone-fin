@@ -36,8 +36,6 @@ public class Playing extends State implements Statemethods{
     private BufferedImage backgroundImg, trees, citynear, cityfar, overlayImg;
 
 
-    private BufferedImage backgroundImg, trees, citynear, cityfar, overlayImg;
-
 
 
     public Playing(Game game, GamePanel gamePanel) {
