@@ -2,30 +2,29 @@
 
     // this class holds the entirety of the game
 
-    import audio.AudioPlayer;
-    import gamestates.*;
-    import gamestates.Menu;
-    import inputs.MouseInputs;
-    import ui.AudioOptions;
-    import ui.SoundButton;
+import audio.AudioPlayer;
+import gamestates.GameOptions;
+import gamestates.Gamestate;
+import gamestates.Menu;
+import gamestates.Playing;
+import inputs.MouseInputs;
+import ui.AudioOptions;
 
     import java.awt.*;
 
     public class Game implements Runnable{
 
-    //// Fields
-        private GameWindow gameWindow;
-        private GamePanel gamePanel;
-        private Thread gameThread;
-        private final int FPS_SET = 120;
-        private GameOptions gameOptions;
-        private final int UPS_SET = 200;
+    private GameWindow gameWindow;
+    private GamePanel gamePanel;
+    private Thread gameThread;
+    private final int FPS_SET = 120;
+    private GameOptions gameOptions;
+    private final int UPS_SET = 200;
 
-        private Playing playing;
-        private Menu menu;
-        private AudioPlayer audioPlayer;
-        private AudioOptions audioOptions;
-        private About about;
+    private Playing playing;
+    private Menu menu;
+    private AudioPlayer audioPlayer;
+    private AudioOptions audioOptions;
 
         public static final int TILES_DEFAULT_SIZE = 32;
         public static final float SCALE = 2.0f;
@@ -38,8 +37,12 @@
         private boolean initialized = false;
         private boolean isFirstRender = true; // Flag to track the first render cycle
 
-    //// Constructor (Game)
-        public Game() {
+//// Constructor (Game)
+    public Game() {
+
+        System.out.println("Initializing GamePanel...");
+        gamePanel = new GamePanel(this);
+        System.out.println("GamePanel reference in Game: " + gamePanel);
 
             System.out.println("Initializing GamePanel...");
             gamePanel = new GamePanel(this);
@@ -71,17 +74,37 @@
         }
 
         private void initClasses() {
-            System.out.println("Initializing Menu...");
             menu = new Menu(this); // Ensure this is done properly
-            System.out.println("Menu initialized: " + (menu != null));
 
-            playing = new Playing(this, gamePanel);
-            System.out.println("Playing initialized: " + (playing != null));
+        playing = new Playing(this, gamePanel);
 
-            audioPlayer = new AudioPlayer(this);
-            gameOptions = new GameOptions(this);
-            audioOptions = new AudioOptions(this);
-            about = new About(this);
+        audioPlayer = new AudioPlayer(this);
+        gameOptions = new GameOptions(this);
+        audioOptions = new AudioOptions(this);;
+        about = new About(this);
+          
+        }
+      
+    private void startGameLoop(){
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
+    public void update() {
+        switch (Gamestate.state) {
+            case MENU:
+                menu.update();
+                break;
+            case PLAYING:
+                playing.update();
+                break;
+            case OPTIONS:
+                gameOptions.update();
+                break;
+            case ABOUT:
+            case EXIT:
+            default:
+                System.exit(0);
+                break;
         }
 
 
@@ -244,3 +267,17 @@
             return about;
         }
     }
+      
+    public AudioPlayer getAudioPlayer(){
+        return audioPlayer;
+    }
+
+    public GameOptions getGameOptions() {
+        return gameOptions;
+    }
+
+
+    public AudioOptions getAudioOptions() {
+        return audioOptions;
+    }
+}

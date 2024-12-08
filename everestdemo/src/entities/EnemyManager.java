@@ -5,6 +5,7 @@ import main.Game;
 import utils.LoadSave;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -21,9 +22,30 @@ public class EnemyManager {
         addEnemies();
     }
 
+
+
+    public void checkLaserHit(LaserBeam laser) {
+        for (Worker w : workers) {
+            if (w.isActive() && laser != null) {
+                if (w.getHitbox().intersectsLine(laser.getHitbox())) {
+                    w.hurt(10); // Deal damage to the worker
+
+                    // Stop laser at the enemy's hitbox position
+                    laser.setEndPosition(w.getHitbox().x + w.getHitbox().width / 2,
+                            w.getHitbox().y + w.getHitbox().height / 2);
+                    return; // Exit after the first collision
+                }
+            }
+        }
+    }
+
+
+
     public void update(int[][] lvlData,Player player) {
         for (Worker w : workers) {
-            w.update(lvlData,player);
+            if(w.isActive())
+                w.update(lvlData,player);
+
         }
     }
 
@@ -33,18 +55,22 @@ public class EnemyManager {
 
     private void drawWorker(Graphics g, int xLevelOffset) {
         for (Worker w : workers) {
-            // Add a vertical offset to align the worker sprite properly
-            int verticalOffset = (int)(17 * Game.SCALE); // Adjust the value to lift the sprite higher
 
-            g.drawImage(workerArr[w.getEnemyState()][w.getAniIndex()],
-                    (int) w.getHitbox().x - xLevelOffset,
-                    (int) w.getHitbox().y - verticalOffset, // Apply the vertical offset
-                    WORKER_WIDTH,
-                    WORKER_HEIGHT,
-                    null);
+            if(w.isActive()) {
+                // Add a vertical offset to align the worker sprite properly
+                int verticalOffset = (int) (17 * Game.SCALE); // Adjust the value to lift the sprite higher
 
-            // Draw the worker's hitbox for debugging
-            w.drawHitBox(g, xLevelOffset);
+                g.drawImage(workerArr[w.getEnemyState()][w.getAniIndex()],
+                        (int) w.getHitbox().x - xLevelOffset + w.flipX(),
+                        (int) w.getHitbox().y - verticalOffset, // Apply the vertical offset
+                        WORKER_WIDTH * w.flipW(),
+                        WORKER_HEIGHT,
+                        null);
+
+                // Draw the worker's hitbox for debugging
+                w.drawHitBox(g, xLevelOffset);
+                w.drawAttackBox(g, xLevelOffset);
+            }
         }
     }
 

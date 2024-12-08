@@ -10,20 +10,19 @@ import ui.AudioOptions;
 import ui.SoundButton;
 import ui.UrmButton;
 import ui.VolumeButton;
+
 import utils.LoadSave;
 import static utils.Constants.UI.UrmButtons.*;
 
 public class GameOptions extends State implements Statemethods {
 
     private AudioOptions audioOptions;
-    private BufferedImage backgroundImg, optionsBackgroundImg, skyBackgroundImg, skyBackground2Img;
     private BufferedImage backgroundTitle, backgroundCity,cloudBackground1,cloudBackground2,cloudBackground3,cloudBackground4;
     private int menuX, menuY, menuWidth, menuHeight;
     private int bgX, bgY, bgW, bgH;
     private double SKYscrollOffset;
     private double CITYscrollOffset;
     private double CLOUD4scrollOffset, CLOUD3scrollOffset; // Used for dynamic scrolling
-
 
     private int skyX1, skyX2; // Two positions for the sky background to create a looping effect
     private UrmButton menuB;
@@ -34,6 +33,7 @@ public class GameOptions extends State implements Statemethods {
         super(game);
         loadImgs();
         loadButton();
+      
         audioOptions = new AudioOptions(game,1);
         System.out.println("AudioOptions initialized: " + (audioOptions != null)); // Debugging output
         skyX1 = 0; // Initialize first sky position
@@ -87,7 +87,6 @@ public class GameOptions extends State implements Statemethods {
         bgH = 500;
         bgX = (Game.GAME_WIDTH / 2 - bgH / 2)-150;
         bgY = (int)(80 * Game.SCALE);
-
     }
 
     @Override
@@ -95,8 +94,6 @@ public class GameOptions extends State implements Statemethods {
 
         audioOptions.updateMenu();
         menuB.update();
-
-
 
         // Move both sky images to the left
         SKYscrollOffset -= 1.0; // Adjust speed here
@@ -124,8 +121,7 @@ public class GameOptions extends State implements Statemethods {
 
     @Override
     public void draw(Graphics g) {
-        // Draw the sky backgrounds at the correct positions for the parallax effect
-
+        // Draw the sky backgrounds at the correct positions for the parallax effec
 
         // Draw the other UI elements like background and options menu
 
@@ -152,13 +148,12 @@ public class GameOptions extends State implements Statemethods {
     }
 
 
-
-
     public void mouseDragged(MouseEvent e) {
         audioOptions.mouseDragged(e);
         if (audioOptions.getvolumeButtonMenu().isMousePressed()) {
             audioOptions.getvolumeButtonMenu().changeX(e.getX());
         }
+
     }
 
     @Override
@@ -210,6 +205,7 @@ public class GameOptions extends State implements Statemethods {
     }
 
     private boolean isIn(MouseEvent e, UrmButton b) {
+
         boolean inside = b.getBounds().contains(e.getX(), e.getY());
         System.out.println("Mouse is inside button: " + inside);
         return inside;

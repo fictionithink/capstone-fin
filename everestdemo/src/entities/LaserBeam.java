@@ -1,40 +1,39 @@
 package entities;
 
 import main.Game;
-import utils.LoadSave;
+import static utils.HelpMethods.*;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.geom.Line2D;
 
 public class LaserBeam {
-    // Fields for the laser's starting position, direction, length, sprite, and fading
-    private float startX, startY; // Starting position of the laser
-    private float endX, endY;     // End position of the laser
-    private float length;         // Dynamic length of the laser
-    private BufferedImage laserSprite;
-    private int alpha;            // Alpha value for fading (0-255)
-    private long creationTime;    // Time when the laser was created
+    private float startX, startY; // Starting point of the laser
+    private float endX, endY;     // End point of the laser
+    private int alpha = 128;      // Opacity (50% transparent, 0-255)
+    private float width = 6.0f;   // Width of the laser rectangle
+    private long creationTime;    // Time the laser was created
+    private boolean faded = false; // Indicates if the laser has faded
+    private Line2D.Float hitbox;  // Line for collision detection
 
-    public LaserBeam(float startX, float startY, float angle) {
-        this.startX = startX;                     // Set the laser's starting x-coordinate
-        this.startY = startY;                     // Set the laser's starting y-coordinate
-        this.alpha = 255;                        // Start fully opaque
+    private int[][] levelData;    // Level data for collision checking
 
-        // Calculate the end position based on the panel dimensions
-        calculateDynamicLength(angle);
-
-        // Load the laser sprite
-        loadLaserSprite();
-
-        // Record the creation time
+    public LaserBeam(float startX, float startY, float angle, int[][] levelData) {
+        this.startX = startX;
+        this.startY = startY;
+        this.levelData = levelData; // Store level data for collision
+        calculateEndPosition(angle);
         this.creationTime = System.currentTimeMillis();
+        hitbox = new Line2D.Float(startX, startY, endX, endY);
     }
 
-    private void loadLaserSprite() {
-        laserSprite = LoadSave.getSpriteAtlas(LoadSave.LASER_BEAM_SPRITE); // Retrieve the laser sprite
+    public void setEndPosition(float x, float y) {
+        this.endX = x;
+        this.endY = y;
+        hitbox.setLine(startX, startY, endX, endY); // Update the hitbox
     }
 
-    private void calculateDynamicLength(float angle) {
+
+    private void calculateEndPosition(float angle) {
         float maxDistance = (float) Math.hypot(Game.GAME_WIDTH, Game.GAME_HEIGHT);
 
         // Incrementally calculate the laser's end point along its path
@@ -42,12 +41,18 @@ public class LaserBeam {
             float currentX = startX + (float) Math.cos(angle) * t;
             float currentY = startY + (float) Math.sin(angle) * t;
 
-            // If the laser exceeds the panel's boundaries, stop
+            // Check for collision with the level
+            if (!CanMoveHere(currentX, currentY, width, width, levelData)) {
+                endX = currentX;
+                endY = currentY;
+                return;
+            }
+
+            // Stop if the laser reaches the screen boundaries
             if (currentX < 0 || currentX > Game.GAME_WIDTH || currentY < 0 || currentY > Game.GAME_HEIGHT) {
-                this.endX = currentX;
-                this.endY = currentY;
-                this.length = (float) Math.hypot(currentX - startX, currentY - startY);
-                break;
+                endX = currentX;
+                endY = currentY;
+                return;
             }
         }
     }
@@ -55,43 +60,53 @@ public class LaserBeam {
     public void update() {
         // Gradually reduce the alpha value over time
         long elapsedTime = System.currentTimeMillis() - creationTime;
-        if (elapsedTime >= 50) { // After 0.5 seconds, start fading
-            alpha = Math.max(0, alpha - 5); // Decrease alpha, but ensure it doesn't go below 0
+        if (elapsedTime >= 300) { // Start fading after 300ms
+            alpha = Math.max(0, alpha - 5); // Gradually decrease opacity
+            if (alpha == 0) faded = true;
         }
+
+        hitbox.setLine(startX, startY, endX, endY);
     }
 
     public boolean isFaded() {
-        return alpha <= 0; // Check if the laser is fully invisible
+        return faded;
+    }
+
+    public void setFaded(boolean faded) {
+        this.faded = faded;
+    }
+
+    public Line2D.Float getHitbox() {
+        return hitbox;
     }
 
     public void draw(Graphics g) {
-        // Calculate the angle of rotation in degrees
-        double rotationAngle = Math.toDegrees(Math.atan2(endY - startY, endX - startX));
-
-        // Cast to Graphics2D for transformations
         Graphics2D g2d = (Graphics2D) g;
 
         // Save the current transformation
         var originalTransform = g2d.getTransform();
 
-        // Translate to the laser's starting point and rotate to match its angle
+        // Set transparency for the laser
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha / 255f)); // Apply opacity
+
+        // Set the color to blue
+        g2d.setColor(Color.BLUE);
+
+        // Translate and rotate to align the rectangle with the laser's path
+        float dx = endX - startX;
+        float dy = endY - startY;
+        double angle = Math.atan2(dy, dx);
+
         g2d.translate(startX, startY);
-        g2d.rotate(Math.toRadians(rotationAngle));
+        g2d.rotate(angle);
 
-        // Set the transparency for fading
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha / 255f));
+        // Draw the laser as a rectangle
+        g2d.fillRect(0, -(int) (width / 2), (int) Math.hypot(dx, dy), (int) width);
 
-        // Stretch the sprite dynamically based on the laser's length
-        g2d.drawImage(
-                laserSprite, 0,                              // Starting point (translated)
-                -(int) (laserSprite.getHeight() / 2 * Game.SCALE), // Center vertically
-                (int) length,                   // Scaled width based on length
-                (int) (laserSprite.getHeight() * Game.SCALE), // Keep height proportional
-                null
-        );
-
-        // Restore the original transformation and alpha
+        // Restore the original transformation
         g2d.setTransform(originalTransform);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+        // Reset transparency
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
     }
 }

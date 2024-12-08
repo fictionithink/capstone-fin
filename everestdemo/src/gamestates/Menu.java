@@ -14,7 +14,8 @@ import static main.Game.*;
 public class Menu extends State implements Statemethods{
 
     private MenuButton[] buttons = new MenuButton[4];
-    private BufferedImage backgroundImg, backgroundTitle, backgroundCity,cloudBackground1,cloudBackground2,cloudBackground3,cloudBackground4;
+    private BufferedImage backgroundImg, backgroundTitle, backgroundCity,cloudBackground1,cloudBackground2,cloudBackground3,cloudBackground4, overlayImg;
+
     private int menuX, menuY, menuWidth, menuHeight;
     private double SKYscrollOffset;
     private BufferedImage[] CatPixelated = new BufferedImage[4];
@@ -76,7 +77,13 @@ public class Menu extends State implements Statemethods{
         menuWidth = (int)(backgroundTitle.getWidth() * Game.SCALE);
         menuHeight = (int)(backgroundTitle.getHeight() * Game.SCALE);
         menuX = GAME_WIDTH / 2 - menuWidth / 2;
-        menuY = (int) (-120 * SCALE);
+        menuY = (int) (-121 * SCALE);
+
+        overlayImg = LoadSave.getSpriteAtlas(LoadSave.MENU_OVERLAY);
+        menuWidth = (int)(backgroundTitle.getWidth() * Game.SCALE);
+        menuHeight = (int)(backgroundTitle.getHeight() * Game.SCALE);
+        menuX = GAME_WIDTH / 2 - menuWidth / 2;
+        menuY = (int) (-121 * SCALE);
 
         buttons[0] = new MenuButton(Game.GAME_WIDTH/2,(int)(190*Game.SCALE),0,Gamestate.PLAYING);
         buttons[1] = new MenuButton(Game.GAME_WIDTH/2,(int)(230*Game.SCALE),1,Gamestate.OPTIONS);
@@ -94,7 +101,6 @@ public class Menu extends State implements Statemethods{
         CatPixelated[3] = spriteSheet.getSubimage(2 * spriteWidth, 3 * spriteHeight, spriteWidth, spriteHeight); // Row 2, Column 3
 
     }
-
 
 /*
     private void loadTitle() {
@@ -161,6 +167,12 @@ public class Menu extends State implements Statemethods{
             g.drawImage(backgroundImg, (int) CITYscrollOffset + Game.GAME_WIDTH, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
 
             g.drawImage(backgroundTitle, 0, menuY, GAME_WIDTH, GAME_HEIGHT, null);
+
+            Graphics2D g2d = (Graphics2D) g;
+            Composite originalComposite = g2d.getComposite(); // Save the original composite
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)); // Set alpha to 30%
+            g2d.drawImage(overlayImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+            g2d.setComposite(originalComposite); // Restore the original composite
 
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastFrameTime >= FRAME_INTERVAL) {

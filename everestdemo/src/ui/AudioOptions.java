@@ -2,14 +2,15 @@ package ui;
 
 import static utils.Constants.UI.PauseButtons.SOUND_SIZE;
 import static utils.Constants.UI.VolumeButtons.SLIDER_WIDTH;
+
 import static utils.Constants.UI.VolumeButtons.SLIDER_WIDTH_MENU;
 import static utils.Constants.UI.VolumeButtons.VOLUME_HEIGHT;
 import static utils.Constants.UI.VolumeButtons.VOLUME_HEIGHT_MENU;
 
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
-
 import audio.AudioPlayer;
+import gamestates.Gamestate;
 import main.Game;
 
 public class AudioOptions {
@@ -54,8 +55,6 @@ public class AudioOptions {
         volumeButtonMenu = new VolumeButton(vX, vY, SLIDER_WIDTH_MENU, VOLUME_HEIGHT_MENU,1);
     }
 
-
-
     private void createSoundButtons() {
         int soundX = (int) (450 * Game.SCALE);
         int musicY = (int) (140 * Game.SCALE);
@@ -77,6 +76,7 @@ public class AudioOptions {
        musicButton.update();
        sfxButton.update();
        volumeButton.update();
+
         volumeButtonMenu.update();
     }
 
@@ -85,8 +85,6 @@ public class AudioOptions {
         sfxButton.update();
         volumeButtonMenu.update();
     }
-
-
 
     public void draw(Graphics g) {
         // Sound buttons
@@ -168,6 +166,7 @@ public class AudioOptions {
 
         volumeButton.resetBools();
         volumeButtonMenu.resetBools();
+
     }
 
     public void mouseMoved(MouseEvent e) {
@@ -176,6 +175,7 @@ public class AudioOptions {
 
         volumeButton.setMouseOver(false);
         volumeButtonMenu.setMouseOver(false);
+
 
         if (isIn(e, musicButton))
             musicButton.setMouseOver(true);

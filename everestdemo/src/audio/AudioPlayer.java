@@ -25,6 +25,7 @@ public class AudioPlayer {
 
     private Clip[] songs, effects;  // diff arrays for diff usages
     public Clip buttonClick;
+
     // Clip is also considered to be a music player
     // AudioInputStream
     private int currentSongId; // what songs is playing sa background
@@ -87,6 +88,7 @@ public class AudioPlayer {
         updateSongVolume();
     }
     private void loadEffects(){
+
         String[] effectNames = {"PlayerDeath", "JumpGrunt", "PlayerDeath", "PlayerHurt", "PlayerShoot", "PlayerShoot", "Punch", "PlayerRun", "EnemyPunch"};
 
         effects = new Clip[effectNames.length];

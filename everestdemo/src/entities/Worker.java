@@ -3,25 +3,46 @@ package entities;
 
 import main.Game;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+
 import static utils.Constants.Directions.LEFT;
 import static utils.Constants.EnemyConstants.*;
 import static utils.HelpMethods.*;
 
 public class Worker extends Enemy {
 
+    private Rectangle2D.Float attackBox;
+    private int attackBoxOffsetX;
+
     public Worker(float x, float y) {
         super(x, y, WORKER_WIDTH, WORKER_HEIGHT, WORKER);
 
         // Align hitbox size and offset
         initHitbox(x+30, y + (int)(14 * Game.SCALE), (int)(30 * Game.SCALE), (int)(28.5 * Game.SCALE));
+        initAttackBox();
+    }
+
+    private void initAttackBox() {
+        attackBox = new Rectangle2D.Float(x,y,(int)(48*Game.SCALE),(int)(28.5 * Game.SCALE));
+        attackBoxOffsetX = (int)(Game.SCALE * 5);
     }
 
     public void update(int[][] lvlData, Player player) {
-        updateMove(lvlData,player);
+        updateBehavior(lvlData,player);
         updateAnimationTick();
+        updateAttackBox();
     }
 
-    private void updateMove(int[][] lvlData, Player player) {
+    private void updateAttackBox() {
+        attackBox.x=hitbox.x-attackBoxOffsetX;
+        attackBox.y= hitbox.y;
+    }
+    public void drawAttackBox(Graphics g, int xLevelOffset){
+        g.setColor(Color.red);
+        g.drawRect((int)(attackBox.x - xLevelOffset) ,(int)attackBox.y,(int)attackBox.width,(int)attackBox.height);
+    }
+    private void updateBehavior(int[][] lvlData, Player player) {
         if (firstUpdate)
             firstUpdateCheck(lvlData);
 
@@ -35,11 +56,22 @@ public class Worker extends Enemy {
                     break;
 
                 case RUNNING:
-                        if(canSeePlayer(lvlData,player))
-                            turnTowardsPlayer(player);
-                        if(isPlayerCloseForAttack(player))
-                            newState(ATTACK);
-                        move(lvlData);
+                    if(canSeePlayer(lvlData,player))
+                        turnTowardsPlayer(player);
+                    if(isPlayerCloseForAttack(player))
+                        newState(ATTACK);
+                    move(lvlData);
+                    break;
+                case ATTACK:
+                    if (aniIndex == 0) {
+                        attackedChecked = false;
+                    }
+                    if (aniIndex == 4 && !attackedChecked) {
+                        checkEnemyHit(attackBox, player); // Damage the player when in range
+                    }
+                    break;
+
+                case HURT:
                     break;
             }
         }

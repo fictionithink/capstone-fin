@@ -4,6 +4,23 @@ import main.Game;
 
 public class Constants {
 
+    public static class Environments {
+        public static final int TREES_WIDTH_DEFAULT = 576;
+        public static final int TREES_HEIGHT_DEFAULT = 324;
+        public static final int TREES_WIDTH = (int)(TREES_WIDTH_DEFAULT * Game.SCALE);
+        public static final int TREES_HEIGHT = (int)(TREES_HEIGHT_DEFAULT * Game.SCALE);
+
+        public static final int CITYNEAR_WIDTH_DEFAULT = 576;
+        public static final int CITYNEAR_HEIGHT_DEFAULT = 324;
+        public static final int CITYNEAR_WIDTH = (int)(CITYNEAR_WIDTH_DEFAULT * Game.SCALE);
+        public static final int CITYNEAR_HEIGHT = (int)(CITYNEAR_HEIGHT_DEFAULT * Game.SCALE);
+
+        public static final int CITYFAR_WIDTH_DEFAULT = 576;
+        public static final int CITYFAR_HEIGHT_DEFAULT = 324;
+        public static final int CITYFAR_WIDTH = (int)(CITYFAR_WIDTH_DEFAULT * Game.SCALE);
+        public static final int CITYFAR_HEIGHT = (int)(CITYFAR_HEIGHT_DEFAULT * Game.SCALE);
+    }
+
     public static class EnemyConstants{
         public static final int WORKER = 0;
 
@@ -29,7 +46,7 @@ public class Constants {
                 case WORKER:
                     switch (enemy_state){
                         case IDLE:
-                                return 3;
+                            return 3;
                         case RUNNING:
                         case DEAD:
                         case ATTACK:
@@ -40,6 +57,24 @@ public class Constants {
             }
 
             return 0;
+        }
+
+        public static int getMaxHealth(int enemyType){
+            switch(enemyType){
+                case WORKER:
+                    return 10;
+                default:
+                    return 1;
+            }
+        }
+
+        public static int GetEnemyDMG(int enemyType){
+            switch(enemyType){
+                case WORKER:
+                    return 15;
+                default:
+                    return 1;
+            }
         }
     }
 

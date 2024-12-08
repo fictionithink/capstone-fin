@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class LoadSave {
 
     public static final String PLAYER_ATLAS = "Cyborg_Spritesheet.png";
-    public static final String LEVEL_ATLAS = "IndustrialTile_0.png";
+    public static final String LEVEL_ATLAS = "world1spritesheet.png";
     public static final String CLOUD_1 = "CloudBackground1.png";
     public static final String CLOUD_2 = "CloudBackground2.png";
     public static final String CLOUD_3 = "CloudBackground3.png";
@@ -22,6 +22,7 @@ public class LoadSave {
     public static final String OPTIONS_MENU = "MenuBackGroundNewPathfinder.png";
     public static final String NEWMENU = "MenuBackGroundNewPathfinder.png";
     public static final String ABOUT_PAGE = "aboutPageOfficial.png";
+
     public static final String MENU_BACKGROUND_IMG = "PurpleSkyBackground.png";
 //    public static final String LEVEL_1_DATA = "level_1_data.png";
     public static final String LEVEL_1_DATA = "level_1_data_long.png";
@@ -38,8 +39,17 @@ public class LoadSave {
     public static final String URM_BUTTONS = "pause atlas.png";
     public static final String VOLUME_BUTTONS = "volume_buttons.png";
     public static final String STATUS_BAR_FULL = "full_health_bar.png";
+    public static final String MENU_OVERLAY = "menuoverlay.png";
 
     public static final String STATUS_BAR_EMPTY = "empty_health_bar.png";
+
+    // world 1 background shenanigans
+    public static final String W1_BACKGROUND = "w1bg_1st.png";
+    public static final String W1_TREES = "w1bg_2nd.png";
+    public static final String W1_CITY_NEAR = "w1bg_3rd.png";
+    public static final String W1_CITY_FAR = "w1bg_4th.png";
+    public static final String W1_CITY_OVERLAY = "w1bg_5th.png";
+
 
 
     public static BufferedImage getSpriteAtlas(String fileName) {
@@ -84,7 +94,7 @@ public class LoadSave {
             for(int i = 0; i < img.getWidth(); i++){
                 Color color = new Color(img.getRGB(i, j));
                 int value = color.getRed();
-                if(value >= 12){
+                if(value >= 108){
                     value = 0;
                 }
                 lvlData[j][i] = value;
