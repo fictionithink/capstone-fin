@@ -122,6 +122,7 @@ public class PauseOverlay {
                 sfxButton.setMuted(!sfxButton.isMuted());
         } else if (isIn(e, menuB)) {
             if (menuB.isMousePressed()) {
+                playing.resetAll();
                 Gamestate.state = Gamestate.MENU;
                 playing.unpauseGame();
                 playing.getGame().getAudioPlayer().stopSong(); // Stop the level music
@@ -129,7 +130,7 @@ public class PauseOverlay {
             }
         } else if (isIn(e, replayB)) {
             if (replayB.isMousePressed())
-                System.out.println("replay lvl!");
+                playing.resetAll();
         } else if (isIn(e, unpauseB)) {
             if (unpauseB.isMousePressed())
                 playing.unpauseGame();

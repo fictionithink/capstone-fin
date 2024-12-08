@@ -1,6 +1,7 @@
 package ui;
 
 
+import audio.AudioPlayer;
 import gamestates.Gamestate;
 import gamestates.Playing;
 import main.Game;
@@ -29,6 +30,9 @@ public class GameOverOverlay {
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
             playing.resetAll();
             Gamestate.state = Gamestate.MENU;
+            playing.unpauseGame();
+            playing.getGame().getAudioPlayer().stopSong(); // Stop the level music
+            playing.getGame().getAudioPlayer().playSong(AudioPlayer.MenuMusic); // Play the menu music
         }
     }
 } 
