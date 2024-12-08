@@ -6,3 +6,4 @@ public enum Gamestate {
     public static Gamestate state = MENU; // Default to MENU
 
 }
+ 
