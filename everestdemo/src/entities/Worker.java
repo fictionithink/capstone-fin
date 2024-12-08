@@ -14,7 +14,7 @@ public class Worker extends Enemy {
     private int attackBoxOffsetX;
 
     public Worker(float x, float y) {
-        super(x, y, WORKER_WIDTH, WORKER_HEIGHT, WORKER,.6f * Game.SCALE);
+        super(x, y, WORKER_WIDTH, WORKER_HEIGHT, WORKER,.4f * Game.SCALE);
 
         // Align hitbox size and offset
         initHitbox(x+30, y + (int)(14 * Game.SCALE), (int)(30 * Game.SCALE), (int)(28.5 * Game.SCALE));
@@ -54,10 +54,11 @@ public class Worker extends Enemy {
                     break;
 
                 case RUNNING:
-                    if(canSeePlayer(lvlData,player))
+                    if(canSeePlayer(lvlData,player)) {
                         turnTowardsPlayer(player);
-                    if(isPlayerCloseForAttack(player))
-                        newState(ATTACK);
+                        if (isPlayerCloseForAttack(player))
+                            newState(ATTACK);
+                    }
                     move(lvlData);
                     break;
                 case ATTACK:

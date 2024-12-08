@@ -1,6 +1,7 @@
 package entities;
 
 import gamestates.Playing;
+import levels.Level;
 import main.Game;
 import utils.LoadSave;
 
@@ -14,17 +15,21 @@ public class EnemyManager {
     private Playing playing;
     private BufferedImage[][] workerArr;
     private ArrayList<Worker> workers = new ArrayList<>();
+    private ArrayList<Muscle> muscles = new ArrayList<>();
 
     private BufferedImage[][] muscleArr;
-    private ArrayList<Muscle> muscles = new ArrayList<>();
 
     public EnemyManager(Playing playing) {
         this.playing = playing;
         loadEnemyImgs();
-        addEnemies();
     }
 
-
+    public void loadEnemies(Level level) {
+        workers = level.getWorkers();
+        muscles = level.getMuscles();
+//        System.out.println("size of enemies: " + workers.size());
+//        System.out.println("size of muscle enemies: " + muscles.size());
+    }
 
     public void checkLaserHit(LaserBeam laser) {
         for (Worker w : workers) {
@@ -56,19 +61,28 @@ public class EnemyManager {
 
 
 
-    public void update(int[][] lvlData,Player player) {
-        for (Worker w : workers) {
-            if(w.isActive())
-                w.update(lvlData,player);
+    public void update(int[][] lvlData, Player player) {
+        boolean isAnyActive = false;
 
+        for (Worker w : workers) {
+            if (w.isActive()) {
+                w.update(lvlData, player);
+                isAnyActive = true;
+            }
         }
 
         for (Muscle m : muscles) {
-            if(m.isActive())
-                m.update(lvlData,player);
+            if (m.isActive()) {
+                m.update(lvlData, player);
+                isAnyActive = true; // This will now only execute if m.isActive() is true
+            }
+        }
 
+        if (!isAnyActive) {
+            playing.setLevelCompleted(true); // Only triggers if no enemies are active
         }
     }
+
 
     public void draw(Graphics g, int xLevelOffset) {
         drawWorker(g, xLevelOffset);
@@ -147,10 +161,5 @@ public class EnemyManager {
         }
     }
 
-    private void addEnemies() {
-        workers = LoadSave.GetWorkers();
-        muscles = LoadSave.GetMuscles();
-        System.out.println("size of enemies: " + workers.size());
-        System.out.println("size of muscle enemies: " + muscles.size());
-    }
+
 }

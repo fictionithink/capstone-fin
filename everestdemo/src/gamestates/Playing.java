@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import static utils.Constants.Environments.*;
+import ui.RoundCompletedOverlay;
 
 public class Playing extends State implements Statemethods{
 
@@ -23,15 +24,16 @@ public class Playing extends State implements Statemethods{
     private GamePanel gamePanel;
     private GameOverOverlay gameOverOverlay;
     private PauseOverlay pauseOverlay;
+    private RoundCompletedOverlay roundCompletedOverlay;
     private boolean paused = false;
 
     private int xLevelOffset;
     private int leftBorder = (int) (0.4 * Game.GAME_WIDTH);
     private int rightBorder = (int) (0.6 * Game.GAME_WIDTH);
-    private int levelTilesWide = LoadSave.GetLevelData()[0].length;
-    private int maxTilesOffset = levelTilesWide - Game.TILES_IN_WIDTH;
-    private int maxLevelOffsetX = maxTilesOffset * Game.TILES_SIZE;
+    private int maxLevelOffsetX;
+
     private boolean gameOver;
+    private boolean roundCompleted = false;
 
     private BufferedImage backgroundImg, trees, citynear, cityfar, overlayImg;
 
@@ -45,6 +47,25 @@ public class Playing extends State implements Statemethods{
         citynear = LoadSave.getSpriteAtlas(LoadSave.W1_CITY_NEAR);
         cityfar = LoadSave.getSpriteAtlas(LoadSave.W1_CITY_FAR);
         overlayImg = LoadSave.getSpriteAtlas(LoadSave.W1_CITY_OVERLAY);
+
+        calcLevelOffset();
+        loadStartLevel();
+    }
+
+    public void loadNextLevel() {
+        if (!roundCompleted) { // Ensure it's not already completed
+            roundCompleted = true;
+            resetAll();
+            levelManager.loadNextLevel();
+        }
+    }
+
+    private void loadStartLevel() {
+        enemyManager.loadEnemies(levelManager.getCurrentLevel());
+    }
+
+    private void calcLevelOffset() {
+        maxLevelOffsetX = levelManager.getCurrentLevel().getLevelOffset();
     }
 
     private void initClasses() {
@@ -52,33 +73,38 @@ public class Playing extends State implements Statemethods{
 
         enemyManager = new EnemyManager(this);
         player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game, this);
-        player.LoadLvlData(levelManager.getCurrentLevel().getLvlData());
+        player.LoadLvlData(levelManager.getCurrentLevel().getLevelData());
         pauseOverlay = new PauseOverlay(this);
         gameOverOverlay = new GameOverOverlay(this);
+        roundCompletedOverlay = new RoundCompletedOverlay(this);
     }
 
     @Override
     public void update() {
-        if(gameOver){
-            return;
-        }
+        if (paused) {
+            pauseOverlay.update();
+        } else if (roundCompleted) {
+            // Update the round completed overlay
+            roundCompletedOverlay.update();
 
-        if (!paused) {
+            // Ensure loadNextLevel() is only called once when the countdown ends
+            if (!roundCompletedOverlay.isCountdownActive() && roundCompleted) {
+                roundCompleted = false; // Prevent further checks
+                loadNextLevel();
+            }
+        } else {
+            // Regular gameplay update
             levelManager.update();
             player.update();
 
-            // Check for laser collisions with workers
+            // Handle laser and enemies
             if (player.getLaser() != null) {
                 enemyManager.checkLaserHit(player.getLaser());
             }
-
-            enemyManager.update(levelManager.getCurrentLevel().getLvlData(), player);
+            enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
             checkCloseToBorder();
-        } else {
-            pauseOverlay.update();
         }
     }
-
 
 
     private void checkCloseToBorder() {
@@ -122,6 +148,8 @@ public class Playing extends State implements Statemethods{
             pauseOverlay.draw(g);
         }else if(gameOver){
             gameOverOverlay.draw(g);
+        } else if (roundCompleted){
+            roundCompletedOverlay.draw(g);
         }
     }
 
@@ -245,15 +273,31 @@ public class Playing extends State implements Statemethods{
 
     public void resetAll() {
         player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), game, this);
-        player.LoadLvlData(levelManager.getCurrentLevel().getLvlData());
+        player.LoadLvlData(levelManager.getCurrentLevel().getLevelData());
         enemyManager = new EnemyManager(this);
         xLevelOffset = 0;
         paused = false;
+        roundCompleted = false;
         gameOver = false;
     }
 
-
     public void setGameOVer(boolean gameOver) {
         this.gameOver = gameOver;
+    }
+
+    public EnemyManager getEnemyManager(){
+        return enemyManager;
+    }
+
+    public void setLevelCompleted(boolean roundCompleted) {
+        this.roundCompleted = roundCompleted;
+        if (roundCompleted) {
+            roundCompletedOverlay.resetCountdown(); // Reset the timer
+        }
+    }
+
+
+    public void setMaxLevelOffset(int levelOffset){
+        this.maxLevelOffsetX = levelOffset;
     }
 } 

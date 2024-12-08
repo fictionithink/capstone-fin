@@ -1,23 +1,34 @@
 package levels;
 
+import gamestates.Gamestate;
 import main.Game;
 import utils.LoadSave;
 
 import java.awt.*;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 
 public class LevelManager {
 
     private Game game;
     private BufferedImage[] levelSprite;
-    private Level level1;
+    private ArrayList<Level> levels;
+    private int levelIndex = 0;
 
     public LevelManager(Game game) {
         this.game = game;
         importOutsideSprites();
-        level1 = new Level(LoadSave.GetLevelData());
+        levels = new ArrayList<>();
+        buildAllLevels();
+    }
+
+    private void buildAllLevels() {
+        BufferedImage[] allLevels = LoadSave.GetAllLevels();
+        for(BufferedImage img : allLevels){
+            levels.add(new Level(img));
+        }
     }
 
     private void importOutsideSprites() {
@@ -33,8 +44,8 @@ public class LevelManager {
 
     public void draw(Graphics g, int xLevelOffset) {
         for (int j = 0; j < Game.TILES_IN_HEIGHT; j++)
-            for (int i = 0; i < level1.getLvlData()[0].length; i++) {
-                int index = level1.getSpriteIndex(i, j);
+            for (int i = 0; i < levels.get(levelIndex).getLevelData()[0].length; i++) {
+                int index = levels.get(levelIndex).getSpriteIndex(i, j);
 
                 g.drawImage(levelSprite[index], Game.TILES_SIZE * i - game.getPlaying().getXLevelOffset(), Game.TILES_SIZE * j, Game.TILES_SIZE, Game.TILES_SIZE, null);
             }
@@ -45,7 +56,25 @@ public class LevelManager {
     }
 
     public Level getCurrentLevel() {
-        return level1;
+        return levels.get(levelIndex);
+    }
+
+    public int getAmountOfLevels(){
+        return levels.size();
+    }
+
+    public void loadNextLevel(){
+        levelIndex++;
+        if(levelIndex >= levels.size()){
+            levelIndex = 0;
+            System.out.println("no more levels, game completed");
+            Gamestate.state = Gamestate.MENU;
+        }
+
+        Level newLevel = levels.get(levelIndex);
+        game.getPlaying().getEnemyManager().loadEnemies(newLevel);
+        game.getPlaying().getPlayer().LoadLvlData(newLevel.getLevelData());
+        game.getPlaying().setMaxLevelOffset(newLevel.getLevelOffset());
     }
 
 }

@@ -1,8 +1,16 @@
 package utils;
 
+import entities.Muscle;
+import entities.Worker;
 import main.Game;
 
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+import static utils.Constants.EnemyConstants.MUSCLE;
+import static utils.Constants.EnemyConstants.WORKER;
 
 public class HelpMethods {
 
@@ -100,6 +108,53 @@ public class HelpMethods {
             return IsALlTileWalkable(firstXTile,secondXTile,yTile,lvlData);
 
 
+    }
+
+    public static int[][] GetLevelData(BufferedImage img){
+        int[][] lvlData = new int[img.getHeight()][img.getWidth()];
+
+        for(int j = 0; j < img.getHeight(); j++){
+            for(int i = 0; i < img.getWidth(); i++){
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getRed();
+                if(value >= 108){
+                    value = 0;
+                }
+                lvlData[j][i] = value;
+            }
+        }
+        return lvlData;
+    }
+
+    public static ArrayList<Worker> GetWorkers(BufferedImage img){
+        ArrayList<Worker> list =    new ArrayList<>();
+
+        for(int j = 0; j < img.getHeight(); j++){
+            for(int i = 0; i < img.getWidth(); i++){
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if(value == MUSCLE)
+                    list.add(new Worker(i* Game.TILES_SIZE, j* Game.TILES_SIZE));
+
+            }
+        }
+        return list;
+    }
+
+
+    public static ArrayList<Muscle> GetMuscles(BufferedImage img) {
+        ArrayList<Muscle> list =    new ArrayList<>();
+
+        for(int j = 0; j < img.getHeight(); j++){
+            for(int i = 0; i < img.getWidth(); i++){
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if(value == WORKER)
+                    list.add(new Muscle(i* Game.TILES_SIZE, j* Game.TILES_SIZE));
+
+            }
+        }
+        return list;
     }
 
 }

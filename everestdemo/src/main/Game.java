@@ -10,6 +10,7 @@ import gamestates.Playing;
 import gamestates.About; // Added for About state
 import inputs.MouseInputs;
 import ui.AudioOptions;
+import utils.LoadSave;
 
 import java.awt.*;
 
@@ -42,25 +43,14 @@ public class Game implements Runnable {
     // Constructor
     public Game() {
 
-        System.out.println("Initializing GamePanel...");
         gamePanel = new GamePanel(this);
-        System.out.println("GamePanel reference in Game: " + gamePanel);
-
         gamePanel.addMouseListener(new MouseInputs(gamePanel)); // Creating MouseInputs instance
-
-        System.out.println("Initializing GameWindow...");
         gameWindow = new GameWindow(gamePanel);
-
-        System.out.println("Initializing Classes...");
         initClasses(); // Initialize menu and other components
-
         initialized = true; // Set this flag after everything is initialized
-
-        System.out.println("Game Initialized");
         Gamestate.state = Gamestate.MENU; // Set state to MENU after initialization
-
+        gamePanel.setFocusable(true);
         gamePanel.requestFocus();
-
         gamePanel.enableMouseInput(); // Enable mouse input after the first render
 
         // Start the game loop after initialization
@@ -68,12 +58,8 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        System.out.println("Initializing Menu...");
         menu = new Menu(this);
-        System.out.println("Menu initialized: " + (menu != null));
-
         playing = new Playing(this, gamePanel);
-        System.out.println("Playing initialized: " + (playing != null));
 
         audioPlayer = new AudioPlayer(this);
         gameOptions = new GameOptions(this);
