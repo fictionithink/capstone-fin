@@ -15,6 +15,7 @@ public class Menu extends State implements Statemethods{
 
     private MenuButton[] buttons = new MenuButton[4];
     private BufferedImage backgroundImg, backgroundTitle, backgroundCity,cloudBackground1,cloudBackground2,cloudBackground3,cloudBackground4, overlayImg;
+
     private int menuX, menuY, menuWidth, menuHeight;
     private double SKYscrollOffset;
     private BufferedImage[] CatPixelated = new BufferedImage[4];
@@ -72,6 +73,7 @@ public class Menu extends State implements Statemethods{
         menuY = (int) (45 * Game.SCALE);
 
         backgroundTitle = LoadSave.getSpriteAtlas(LoadSave.MENU_TITLE);
+
         menuWidth = (int)(backgroundTitle.getWidth() * Game.SCALE);
         menuHeight = (int)(backgroundTitle.getHeight() * Game.SCALE);
         menuX = GAME_WIDTH / 2 - menuWidth / 2;
@@ -196,6 +198,7 @@ public class Menu extends State implements Statemethods{
         for (MenuButton mb : buttons) {
             if (isIn(e, mb)) {  // Check if the mouse is over a button
                 mb.setMousePressed(true);  // Set this button as pressed
+                game.getAudioPlayer().playClick(); // Play button click sound
                 break;  // Exit the loop once the button is pressed
             }
         }

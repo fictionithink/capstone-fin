@@ -24,6 +24,8 @@ public class AudioPlayer {
     public static int ENEMY_ATTACK = 8;
 
     private Clip[] songs, effects;  // diff arrays for diff usages
+    public Clip buttonClick;
+
     // Clip is also considered to be a music player
     // AudioInputStream
     private int currentSongId; // what songs is playing sa background
@@ -34,7 +36,14 @@ public class AudioPlayer {
     public AudioPlayer(Game game){
         loadSongs();
         loadEffects();
+        loadClick();
         playSong(MenuMusic);
+    }
+
+    public AudioPlayer(Game game, int extra){
+        loadSongs();
+        loadEffects();
+        loadClick();
     }
 
     // now we have 3 methods
@@ -48,14 +57,25 @@ public class AudioPlayer {
         }
     }
 
+    public void loadClick(){
+        String name = "ButtonsClick";
+        buttonClick = getClip(name);
+    }
+
+    public void playClick(){
+        buttonClick.setMicrosecondPosition(0);
+        buttonClick.start();
+    }
+
     public void stopSong(int song){
         if (songs[currentSongId].isActive()) {
             songs[currentSongId].stop();
         }
     }
 
-    public void setLevelSong(int lvlIndex){
-        if (lvlIndex % 2 == 0){
+    public void setLevelSong(int lvlIndex) {
+        stopSong(); // Stop the currently playing song
+        if (lvlIndex % 2 == 0) {
             playSong(LEVEL_1);
         } else {
             playSong(LEVEL_2);
@@ -68,7 +88,8 @@ public class AudioPlayer {
         updateSongVolume();
     }
     private void loadEffects(){
-        String[] effectNames = {"PlayerDeath", "PlayerJump", "PlayerDeath", "PlayerHurt", "PlayerShoot", "PlayerShoot", "Punch", "PlayerRun", "EnemyPunch"};
+
+        String[] effectNames = {"PlayerDeath", "JumpGrunt", "PlayerDeath", "PlayerHurt", "PlayerShoot", "PlayerShoot", "Punch", "PlayerRun", "EnemyPunch"};
 
         effects = new Clip[effectNames.length];
 

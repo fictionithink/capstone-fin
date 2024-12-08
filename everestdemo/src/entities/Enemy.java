@@ -7,10 +7,13 @@
     import static utils.Constants.EnemyConstants.*;
     import static utils.HelpMethods.*;
     import static utils.Constants.Directions.*;
+    import audio.AudioPlayer;
+    import gamestates.Playing;
+    import main.Game;
 
     public abstract class Enemy extends Entity {
 
-        protected int walkDir = LEFT;
+         protected int walkDir = LEFT;
         protected float walkSpeed = .6f * Game.SCALE;
         protected float gravity = 0.04f * Game.SCALE;
         protected boolean firstUpdate = true;
@@ -84,16 +87,25 @@
             }
         }
 
+    public Enemy(float x, float y, int width, int height, int enemyType) {
+        super(x, y, width, height);
+        this.enemyType = enemyType;
+        this.playing = playing;
+        initHitbox(x, y, width, height);
+    }
+
         protected void turnTowardsPlayer(Player player){
             if(player.hitbox.x> hitbox.x)
                 walkDir = RIGHT;
             else
                 walkDir = LEFT;
-
         }
 
         protected boolean canSeePlayer(int[][] lvlData, Player player) {
             int playerTileY =(int)player.getHitbox().y/Game.TILES_SIZE;
+
+    protected void move(int[][] lvlData) {
+        float xSpeed = (walkDir == LEFT) ? -walkSpeed : walkSpeed;
 
             if(playerTileY == tileY)
                 if(isPlayerInRange(player)){
@@ -121,7 +133,15 @@
 
 
         }
-
+          
+    protected void attack(Player player) {
+        if (isPlayerCloseForAttack(player)) {
+            newState(ATTACK); // Change to attack state
+            // Play the attack sound
+            playing.getGame().getAudioPlayer().playSong(AudioPlayer.ENEMY_ATTACK);
+        }
+    }
+          
         protected void updateAnimationTick() {
             aniTick++;
             if (aniTick >= aniSpeed) {

@@ -80,7 +80,9 @@ public class Player extends Entity{
 
     private int flipX=0;
     private int flipW=1;
-    public Player(float x, float y, int width, int height, Game game,Playing playing) {
+
+    public Player(float x, float y, int width, int height, Game game, Playing playing) {
+
         super(x, y, width, height);
         this.playing = playing;
         this.gamePanel = game.getGamePanel(); // Retrieve GamePanel from Game
@@ -96,8 +98,17 @@ public class Player extends Entity{
         float startX = arm.x + arm.width / 2;
         float startY = arm.y + arm.height / 2;
 
-        currentLaser = new LaserBeam(startX-8, startY-8, gunAngle,lvlData);
+        currentLaser = new LaserBeam(startX, startY, gunAngle);
+
+        // Play the laser shooting sound effect immediately
+        new Thread(() -> {
+            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.ATTACK_ONE);
+        }).start();
+
+        // Record the laser start time
         laserStartTime = System.currentTimeMillis();
+
+        // Prevent shooting until cooldown is over
         canShoot = false;
     }
 
@@ -220,12 +231,14 @@ public class Player extends Entity{
         updateArmPosition(); // Update the arm's visual position
         updateArmRotation(); // Update the arm rotation
 
-        if (moving && !isRunningSoundPlaying) {
-            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.RUNNING); // Replace with your running sound constant
-            isRunningSoundPlaying = true;
-        } else if (!moving && isRunningSoundPlaying) {
-            playing.getGame().getAudioPlayer().stopEffect(AudioPlayer.RUNNING); // Stop the sound
-            isRunningSoundPlaying = false;
+        if (playing.getGame().getState() instanceof Playing) {
+            if (moving && !isRunningSoundPlaying) {
+                playing.getGame().getAudioPlayer().playEffect(AudioPlayer.RUNNING); // Replace with your running sound constant
+                isRunningSoundPlaying = true;
+            } else if (!moving && isRunningSoundPlaying) {
+                playing.getGame().getAudioPlayer().stopEffect(AudioPlayer.RUNNING); // Stop the sound
+                isRunningSoundPlaying = false;
+            }
         }
 
         if (currentLaser != null) {
@@ -372,9 +385,10 @@ public class Player extends Entity{
     private void jump() {
         if(inAir)
             return;
-        playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
-        inAir = true;
-        airSpeed = jumpSpeed;
+            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
+            inAir = true;
+            airSpeed = jumpSpeed;
+
     }
 
     private void resetInAir() {
@@ -426,6 +440,10 @@ public class Player extends Entity{
         playing.getGame().getAudioPlayer().playEffect(AudioPlayer.ATTACK_ONE);
         this.attacking = attacking;
 
+        // Immediately play the punching sound
+        if (attacking) {
+            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.ATTACK_THREE);
+        }
     }
 
     public void setLeft(boolean left) {
