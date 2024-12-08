@@ -15,6 +15,14 @@ public class PauseButton {
         createBounds();
     }
 
+    public PauseButton(int x, int y, int width, int height,int hi) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        createBounds();
+    }
+
     private void createBounds() {
         bounds = new Rectangle(x, y, width, height);
     }

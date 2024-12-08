@@ -186,6 +186,7 @@ public class Menu extends State implements Statemethods{
         for (MenuButton mb : buttons) {
             if (isIn(e, mb)) {  // Check if the mouse is over a button
                 mb.setMousePressed(true);  // Set this button as pressed
+                game.getAudioPlayer().playClick(); // Play button click sound
                 break;  // Exit the loop once the button is pressed
             }
         }

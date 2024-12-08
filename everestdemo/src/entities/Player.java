@@ -216,13 +216,14 @@ public class Player extends Entity{
         updateArmPosition(); // Update the arm's visual position
         updateArmRotation(); // Update the arm rotation
 
+        if (playing.getGame().getState() instanceof Playing) {
         if (moving && !isRunningSoundPlaying) {
             playing.getGame().getAudioPlayer().playEffect(AudioPlayer.RUNNING); // Replace with your running sound constant
             isRunningSoundPlaying = true;
         } else if (!moving && isRunningSoundPlaying) {
             playing.getGame().getAudioPlayer().stopEffect(AudioPlayer.RUNNING); // Stop the sound
             isRunningSoundPlaying = false;
-        }
+        }}
 
         if (currentLaser != null) {
             currentLaser.update();
@@ -356,9 +357,11 @@ public class Player extends Entity{
     private void jump() {
         if(inAir)
             return;
-        playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
-        inAir = true;
-        airSpeed = jumpSpeed;
+        if (playing.getGame().getState() instanceof Playing) {
+            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);}
+            inAir = true;
+            airSpeed = jumpSpeed;
+
     }
 
     private void resetInAir() {
@@ -407,7 +410,9 @@ public class Player extends Entity{
     }
 
     public void setAttacking(boolean attacking) {
-        playing.getGame().getAudioPlayer().playEffect(AudioPlayer.ATTACK_ONE);
+        if (playing.getGame().getState() instanceof Playing) {
+            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.ATTACK_ONE);
+        }
         this.attacking = attacking;
 
     }
