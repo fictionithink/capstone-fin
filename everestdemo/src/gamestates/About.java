@@ -68,6 +68,11 @@
         }
 
         @Override
+        public void mouseDragged(MouseEvent e){
+
+        }
+
+        @Override
         public void mouseReleased(MouseEvent e) {
             // Handle the menu button release
             if (isIn(e, menuB) && menuB.isMousePressed()) {

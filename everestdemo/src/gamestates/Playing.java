@@ -193,18 +193,23 @@ public class Playing extends State implements Statemethods{
 
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
-        if(!gameOver)
-            if (paused)
-                pauseOverlay.mousePressed(e);
+        if (gameOver) return;
+
+        if (paused) {
+            pauseOverlay.mousePressed(e);
+            return;
+        }
 
         int button = e.getButton();
         if (button == MouseEvent.BUTTON1) { // Left-click
-            player.setAttacking(true); // Ensure this is called
-        } else if (button == MouseEvent.BUTTON3) { // Right-click
+            player.setAttacking(true);
+        } else if (button == MouseEvent.BUTTON3) { // Right or Middle-click
             getPlayer().shootLaser();
         }
     }
+
 
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -215,11 +220,11 @@ public class Playing extends State implements Statemethods{
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if(paused)
+        if (paused) {
             pauseOverlay.mouseMoved(e);
-        else
+        } else if (!gameOver) {
             gamePanel.setMouseCoordinates(e.getX(), e.getY());
-
+        }
     }
 
     public void windowFocusLost() {
@@ -243,6 +248,7 @@ public class Playing extends State implements Statemethods{
         player.LoadLvlData(levelManager.getCurrentLevel().getLvlData());
         enemyManager = new EnemyManager(this);
         xLevelOffset = 0;
+        paused = false;
         gameOver = false;
     }
 

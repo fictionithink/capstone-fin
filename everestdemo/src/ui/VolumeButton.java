@@ -15,7 +15,6 @@ public class VolumeButton extends PauseButton {
     private int buttonX, minX, maxX;
     private float floatValue = 0;
 
-
     public VolumeButton(int x, int y, int width, int height) {
         super(780 + width / 2, 570, VOLUME_WIDTH, height); // Center button
         bounds.x -= VOLUME_WIDTH / 2; // Adjust bounds to match button's width
@@ -39,6 +38,29 @@ public class VolumeButton extends PauseButton {
         loadImgs(); // Load slider and button images
     }
 
+    public VolumeButton(int x, int y, int width, int height, int hi) {
+        super(x, y, VOLUME_WIDTH, height, hi); // Center button
+        bounds.x -= VOLUME_WIDTH / 2; // Adjust bounds to match button's width
+
+        // Set slider's x and y based on red rectangle alignment
+        this.x = x; // Adjust x to position slider horizontally
+        this.y = y; // Adjust y to position slider vertically
+        this.width = width;
+
+        // Initialize button position and movement boundaries
+        buttonX = this.x + this.width / 2; // Center the button
+        minX = this.x + VOLUME_WIDTH / 2;  // Set left boundary
+        maxX = this.x + this.width - VOLUME_WIDTH / 2; // Set right boundary
+
+        // Dynamically set hitbox bounds for the button
+        bounds.x = buttonX - VOLUME_WIDTH / 2;
+        bounds.y = this.y;
+        bounds.width = VOLUME_WIDTH; // Match button width
+        bounds.height = height;      // Match button height
+
+        loadImgsMenu(); // Load menu-specific slider and button images
+    }
+
     private void loadImgs() {
         BufferedImage temp = LoadSave.getSpriteAtlas(LoadSave.VOLUME_BUTTONS);
         imgs = new BufferedImage[3];
@@ -46,13 +68,21 @@ public class VolumeButton extends PauseButton {
             imgs[i] = temp.getSubimage(i * VOLUME_DEFAULT_WIDTH, 0, VOLUME_DEFAULT_WIDTH, VOLUME_DEFAULT_HEIGHT);
 
         slider = temp.getSubimage(3 * VOLUME_DEFAULT_WIDTH, 0, SLIDER_DEFAULT_WIDTH, VOLUME_DEFAULT_HEIGHT);
+    }
 
+    private void loadImgsMenu() {
+        BufferedImage temp = LoadSave.getSpriteAtlas(LoadSave.VOLUME_BUTTONS);
+        imgs = new BufferedImage[3];
+        for (int i = 0; i < imgs.length; i++)
+            imgs[i] = temp.getSubimage(i * VOLUME_DEFAULT_WIDTH, 0, VOLUME_DEFAULT_WIDTH, VOLUME_DEFAULT_HEIGHT);
+
+        slider = temp.getSubimage(3 * VOLUME_DEFAULT_WIDTH, 0, SLIDER_DEFAULT_WIDTH, VOLUME_DEFAULT_HEIGHT);
     }
 
     private void updateFloatValue() {
         float range = maxX - minX;
         float value = buttonX - minX;
-        floatValue = value/range;
+        floatValue = value / range;
     }
 
     public void update() {
@@ -61,11 +91,10 @@ public class VolumeButton extends PauseButton {
             index = 1;
         if (mousePressed)
             index = 2;
-
     }
 
     public void draw(Graphics g) {
-// Draw slider background
+        // Draw slider background
         g.drawImage(slider, x, y, width, height, null);
 
         // Draw draggable button (centered vertically on the slider)

@@ -21,17 +21,17 @@ public class Constants {
         public static final int CITYFAR_HEIGHT = (int)(CITYFAR_HEIGHT_DEFAULT * Game.SCALE);
     }
 
-    public static class EnemyConstants{
+    public static class EnemyConstants {
         public static final int WORKER = 0;
 
-        public static final  int IDLE =0;
-        public static final  int RUNNING =1;
-        public static final  int HURT =2;
-        public static final  int DEAD =3;
-        public static final  int ATTACK =4;
+        public static final int IDLE = 0;
+        public static final int RUNNING = 1;
+        public static final int HURT = 2;
+        public static final int DEAD = 3;
+        public static final int ATTACK = 4;
 
-        public static final  int WORKER_WIDTH_DEFAULT=48;
-        public static final  int WORKER_HEIGHT_DEFAULT=48;
+        public static final int WORKER_WIDTH_DEFAULT = 48;
+        public static final int WORKER_HEIGHT_DEFAULT = 48;
 
         public static final int WORKER_WIDTH = (int)(WORKER_WIDTH_DEFAULT * Game.SCALE);
         public static final int WORKER_HEIGHT = (int)(WORKER_HEIGHT_DEFAULT * Game.SCALE);
@@ -39,12 +39,10 @@ public class Constants {
         public static final int WORKER_DRAWOFFSET_X = (int)(48 * Game.SCALE);
         public static final int WORKER_DRAWOFFSET_Y = (int)(48 * Game.SCALE);
 
-
-        public static int GetSpriteAmount(int enemy_type,int enemy_state){
-
-            switch(enemy_type){
+        public static int GetSpriteAmount(int enemy_type, int enemy_state) {
+            switch (enemy_type) {
                 case WORKER:
-                    switch (enemy_state){
+                    switch (enemy_state) {
                         case IDLE:
                             return 3;
                         case RUNNING:
@@ -55,12 +53,11 @@ public class Constants {
                             return 1;
                     }
             }
-
             return 0;
         }
 
-        public static int getMaxHealth(int enemyType){
-            switch(enemyType){
+        public static int getMaxHealth(int enemyType) {
+            switch (enemyType) {
                 case WORKER:
                     return 10;
                 default:
@@ -68,8 +65,8 @@ public class Constants {
             }
         }
 
-        public static int GetEnemyDMG(int enemyType){
-            switch(enemyType){
+        public static int GetEnemyDMG(int enemyType) {
+            switch (enemyType) {
                 case WORKER:
                     return 15;
                 default:
@@ -79,21 +76,23 @@ public class Constants {
     }
 
     public static class UI {
-        public static class Buttons{
+        public static class Buttons {
             public static final int B_WIDTH_DEFAULT = 96;
             public static final int B_HEIGHT_DEFAULT = 32;
-            public static final int B_WIDTH = (int) (B_WIDTH_DEFAULT * Game.SCALE);
-            public static final int B_HEIGHT = (int) (B_HEIGHT_DEFAULT * Game.SCALE);
+            public static final int B_WIDTH = (int)(B_WIDTH_DEFAULT * Game.SCALE);
+            public static final int B_HEIGHT = (int)(B_HEIGHT_DEFAULT * Game.SCALE);
         }
 
         public static class PauseButtons {
             public static final int SOUND_SIZE_DEFAULT = 16;
-            public static final int SOUND_SIZE = (int) (SOUND_SIZE_DEFAULT * Game.SCALE);
+            public static final int SOUND_SIZE = (int)(SOUND_SIZE_DEFAULT * Game.SCALE);
+            public static final int SOUND_SIZE_MENU = ((int)(SOUND_SIZE_DEFAULT * Game.SCALE)) + 20;
         }
 
         public static class UrmButtons {
             public static final int URM_DEFAULT_SIZE = 16;
             public static final int URM_SIZE = (int)(URM_DEFAULT_SIZE * Game.SCALE);
+            public static final int URM_SIZE_MENU = 70;
         }
 
         public static class VolumeButtons {
@@ -101,10 +100,11 @@ public class Constants {
             public static final int VOLUME_DEFAULT_HEIGHT = 43;
             public static final int SLIDER_DEFAULT_WIDTH = 215;
 
-            public static final int VOLUME_WIDTH = (int)(VOLUME_DEFAULT_WIDTH * Game.SCALE/2);
-            public static final int VOLUME_HEIGHT = (int)(VOLUME_DEFAULT_HEIGHT * Game.SCALE/2);
-            public static final int SLIDER_WIDTH = (int)(SLIDER_DEFAULT_WIDTH * Game.SCALE/2);
-
+            public static final int VOLUME_WIDTH = (int)(VOLUME_DEFAULT_WIDTH * Game.SCALE / 2);
+            public static final int VOLUME_HEIGHT = (int)(VOLUME_DEFAULT_HEIGHT * Game.SCALE / 2);
+            public static final int SLIDER_WIDTH = (int)(SLIDER_DEFAULT_WIDTH * Game.SCALE / 2);
+            public static final int VOLUME_HEIGHT_MENU = ((int)(VOLUME_DEFAULT_HEIGHT * Game.SCALE / 2)) + 20;
+            public static final int SLIDER_WIDTH_MENU = ((int)(SLIDER_DEFAULT_WIDTH * Game.SCALE / 2)) + 250;
         }
     }
 
@@ -127,7 +127,7 @@ public class Constants {
         public static final int HEAVY_ATTACK_1 = 8;
         public static final int HEAVY_ATTACK_2 = 9;
 
-        public static int GetSpriteAmount(int player_action){
+        public static int GetSpriteAmount(int player_action) {
             switch (player_action) {
                 case HURT:
                     return 2;
@@ -149,6 +149,4 @@ public class Constants {
             }
         }
     }
-
 }
-

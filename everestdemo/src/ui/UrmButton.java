@@ -10,7 +10,7 @@ public class UrmButton extends PauseButton {
 
     private BufferedImage[] imgs;
     private int rowIndex, index;
-    private boolean mouseOver,mousePressed;
+    private boolean mouseOver, mousePressed;
 
     public UrmButton(int x, int y, int width, int height, int rowIndex) {
         super(x, y, width, height);
@@ -18,24 +18,36 @@ public class UrmButton extends PauseButton {
         loadImgs();
     }
 
+    public UrmButton(int x, int y, int width, int height, int rowIndex, int hola) {
+        super(x, y, width, height, 1);
+        this.rowIndex = rowIndex;
+        loadImgs();
+    }
+
     private void loadImgs() {
         BufferedImage temp = LoadSave.getSpriteAtlas(LoadSave.URM_BUTTONS);
         imgs = new BufferedImage[3];
-        for(int i = 0; i < imgs.length; i++){
+        for (int i = 0; i < imgs.length; i++) {
             imgs[i] = temp.getSubimage(i * URM_DEFAULT_SIZE, rowIndex * URM_DEFAULT_SIZE, URM_DEFAULT_SIZE, URM_DEFAULT_SIZE);
         }
     }
 
-    public void update(){
+    public void update() {
         index = 0;
-        if(mouseOver)
+        if (mouseOver)
             index = 1;
-        if(mousePressed)
+        if (mousePressed)
             index = 2;
     }
 
-    public void draw(Graphics g){
-        g.drawImage(imgs[index],x, y, URM_SIZE, URM_SIZE, null);
+    public void draw(Graphics g) {
+        update();
+        g.drawImage(imgs[index], x, y, URM_SIZE, URM_SIZE, null);
+    }
+
+    public void drawMenu(Graphics g) {
+        update();
+        g.drawImage(imgs[index], x, y, URM_SIZE_MENU, URM_SIZE_MENU, null);
     }
 
     public void resetBools() {
@@ -59,4 +71,3 @@ public class UrmButton extends PauseButton {
         this.mousePressed = mousePressed;
     }
 }
-

@@ -5,7 +5,7 @@ import ui.MenuButton;
 
 import java.awt.event.MouseEvent;
 
-public class State {
+public abstract class State {
 
     protected Game game;
 
@@ -20,4 +20,6 @@ public class State {
     public Game getGame(){
         return game;
     }
+
+    public abstract void mouseDragged(MouseEvent e);
 }

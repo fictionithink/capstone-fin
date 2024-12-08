@@ -33,7 +33,7 @@ public class Menu extends State implements Statemethods{
     public Menu(Game game) {
         super(game);
         System.out.println("Menu constructor called.");
-       // loadButtons();
+        // loadButtons();
         loadCONTENT();
         isInitialized = true;  // Mark as initialized after the menu and buttons are loaded
     }
@@ -100,26 +100,26 @@ public class Menu extends State implements Statemethods{
 
     }
 
-/*
-    private void loadTitle() {
-        backgroundImg = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND);
+    /*
+        private void loadTitle() {
+            backgroundImg = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND);
 
-        backgroundTitle = LoadSave.getSpriteAtlas(LoadSave.MENU_TITLE);
+            backgroundTitle = LoadSave.getSpriteAtlas(LoadSave.MENU_TITLE);
 
-        menuWidth = (int)(backgroundTitle.getWidth() * Game.SCALE);
-        menuHeight = (int)(backgroundTitle.getHeight() * Game.SCALE);
-        menuX = GAME_WIDTH / 2 - menuWidth / 2;
-        menuY = (int) (-120 * SCALE);
+            menuWidth = (int)(backgroundTitle.getWidth() * Game.SCALE);
+            menuHeight = (int)(backgroundTitle.getHeight() * Game.SCALE);
+            menuX = GAME_WIDTH / 2 - menuWidth / 2;
+            menuY = (int) (-120 * SCALE);
 
-    }
+        }
 
-    private void loadButtons() {
-        buttons[0] = new MenuButton(Game.GAME_WIDTH/2,(int)(190*Game.SCALE),0,Gamestate.PLAYING);
-        buttons[1] = new MenuButton(Game.GAME_WIDTH/2,(int)(230*Game.SCALE),1,Gamestate.OPTIONS);
-        buttons[2] = new MenuButton(Game.GAME_WIDTH/2,(int)(270*Game.SCALE),2,Gamestate.ABOUT);
-        buttons[3] = new MenuButton(Game.GAME_WIDTH/2,(int)(310*Game.SCALE),3,Gamestate.EXIT);
-    }
-*/
+        private void loadButtons() {
+            buttons[0] = new MenuButton(Game.GAME_WIDTH/2,(int)(190*Game.SCALE),0,Gamestate.PLAYING);
+            buttons[1] = new MenuButton(Game.GAME_WIDTH/2,(int)(230*Game.SCALE),1,Gamestate.OPTIONS);
+            buttons[2] = new MenuButton(Game.GAME_WIDTH/2,(int)(270*Game.SCALE),2,Gamestate.ABOUT);
+            buttons[3] = new MenuButton(Game.GAME_WIDTH/2,(int)(310*Game.SCALE),3,Gamestate.EXIT);
+        }
+    */
     @Override
     public void update() {
         if (isInitialized) {  // Only update menu if it is initialized
@@ -151,7 +151,7 @@ public class Menu extends State implements Statemethods{
     @Override
     public void draw(Graphics g) {
         if (isInitialized) {  // Only draw menu if it is initialized
-         //   g.drawImage(backgroundImg, 0, 0, GAME_WIDTH, GAME_HEIGHT, null);
+            //   g.drawImage(backgroundImg, 0, 0, GAME_WIDTH, GAME_HEIGHT, null);
             g.drawImage(cloudBackground1, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
             g.drawImage(cloudBackground2, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
 
@@ -196,6 +196,7 @@ public class Menu extends State implements Statemethods{
         for (MenuButton mb : buttons) {
             if (isIn(e, mb)) {  // Check if the mouse is over a button
                 mb.setMousePressed(true);  // Set this button as pressed
+                game.getAudioPlayer().playClick(); // Play button click sound
                 break;  // Exit the loop once the button is pressed
             }
         }

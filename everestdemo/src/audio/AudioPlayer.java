@@ -23,62 +23,78 @@ public class AudioPlayer {
     public static int RUNNING = 7;
     public static int ENEMY_ATTACK = 8;
 
-    private Clip[] songs, effects;  // diff arrays for diff usages
-    // Clip is also considered to be a music player
-    // AudioInputStream
-    private int currentSongId; // what songs is playing sa background
-    private float volume = 1f; // for our volume obviously
-    private boolean songMute, effectMute;
-    private Random rand = new Random(); // to avoid repetitive audios
+    private Clip[] songs, effects;
+    public Clip buttonClick;
 
-    public AudioPlayer(Game game){
+    private int currentSongId;
+    private float volume = 1f;
+    private boolean songMute, effectMute;
+    private Random rand = new Random();
+
+    public AudioPlayer(Game game) {
         loadSongs();
         loadEffects();
+        loadClick();
         playSong(MenuMusic);
     }
 
-    // now we have 3 methods
+    public AudioPlayer(Game game, int extra) {
+        loadSongs();
+        loadEffects();
+        loadClick();
+    }
 
-    private void loadSongs(){
-        String[] names = {"MenuMusic","PlayingMusic","PlayingMusic"};
+    private void loadSongs() {
+        String[] names = {"MenuMusic", "PlayingMusic", "PlayingMusic"};
         songs = new Clip[names.length];
 
-        for (int i = 0; i < songs.length; i++){
+        for (int i = 0; i < songs.length; i++) {
             songs[i] = getClip(names[i]);
         }
     }
 
-    public void stopSong(int song){
+    public void loadClick() {
+        String name = "ButtonsClick";
+        buttonClick = getClip(name);
+    }
+
+    public void playClick() {
+        buttonClick.setMicrosecondPosition(0);
+        buttonClick.start();
+    }
+
+    public void stopSong(int song) {
         if (songs[currentSongId].isActive()) {
             songs[currentSongId].stop();
         }
     }
 
-    public void setLevelSong(int lvlIndex){
-        if (lvlIndex % 2 == 0){
+    public void setLevelSong(int lvlIndex) {
+        stopSong();
+        if (lvlIndex % 2 == 0) {
             playSong(LEVEL_1);
         } else {
             playSong(LEVEL_2);
         }
     }
 
-    public void setVolume(float volume){
+    public void setVolume(float volume) {
         this.volume = volume;
         updateEffectsVolume();
         updateSongVolume();
     }
-    private void loadEffects(){
-        String[] effectNames = {"PlayerDeath", "PlayerJump", "PlayerDeath", "PlayerHurt", "PlayerShoot", "PlayerShoot", "Punch", "PlayerRun", "EnemyPunch"};
+
+    private void loadEffects() {
+        String[] effectNames = {"PlayerDeath", "JumpGrunt", "PlayerDeath", "PlayerHurt", "PlayerShoot", "PlayerShoot", "Punch", "PlayerRun", "EnemyPunch"};
 
         effects = new Clip[effectNames.length];
 
-        for (int i = 0; i < effects.length; i++){
+        for (int i = 0; i < effects.length; i++) {
             effects[i] = getClip(effectNames[i]);
         }
 
         updateEffectsVolume();
     }
-
 
     private Clip getClip(String name) {
         URL url = getClass().getResource("/audio/" + name + ".wav");
@@ -97,67 +113,63 @@ public class AudioPlayer {
         return null;
     }
 
-    public void stopSong(){
-        if (songs[currentSongId].isActive()){
+    public void stopSong() {
+        if (songs[currentSongId].isActive()) {
             songs[currentSongId].stop();
         }
     }
 
-    public void playAttackSound(){
-        int start = 4; // pagdepend sa effectNames array sa taas;
+    public void playAttackSound() {
+        int start = 4;
         start += rand.nextInt(3);
         playEffect(start);
     }
 
-    public void playEffect(int effect){
+    public void playEffect(int effect) {
         effects[effect].setMicrosecondPosition(0);
         effects[effect].start();
     }
 
-    public void playSong(int song){
-
+    public void playSong(int song) {
         stopSong();
         currentSongId = song;
         updateSongVolume();
         songs[currentSongId].setMicrosecondPosition(0);
         songs[currentSongId].loop(Clip.LOOP_CONTINUOUSLY);
-
     }
 
-    public void lvlCompleted(){
+    public void lvlCompleted() {
         stopSong();
         playEffect(LVL_COMPLETED);
-
     }
 
-    public void toggleSongMute(){
+    public void toggleSongMute() {
         this.songMute = !songMute;
-        for (Clip c : songs){
+        for (Clip c : songs) {
             BooleanControl booleanControl = (BooleanControl) c.getControl(BooleanControl.Type.MUTE);
             booleanControl.setValue(songMute);
         }
     }
 
-    public void toggleEffectMute(){
+    public void toggleEffectMute() {
         this.effectMute = !effectMute;
-        for (Clip c : songs){
+        for (Clip c : songs) {
             BooleanControl booleanControl = (BooleanControl) c.getControl(BooleanControl.Type.MUTE);
             booleanControl.setValue(effectMute);
         }
-        if (!effectMute){
+        if (!effectMute) {
             playEffect(JUMP);
         }
     }
 
-    private void updateSongVolume(){
+    private void updateSongVolume() {
         FloatControl gainControl = (FloatControl) songs[currentSongId].getControl(FloatControl.Type.MASTER_GAIN);
         float range = gainControl.getMaximum() - gainControl.getMinimum();
-        float gain = (range*volume)+gainControl.getMinimum();
+        float gain = (range * volume) + gainControl.getMinimum();
         gainControl.setValue(gain);
-        //gainControl.setValue(1f);
     }
 
-    private void updateEffectsVolume(){
+    private void updateEffectsVolume() {
         for (Clip c : effects) {
             FloatControl gainControl = (FloatControl) songs[currentSongId].getControl(FloatControl.Type.MASTER_GAIN);
             float range = gainControl.getMaximum() - gainControl.getMinimum();
@@ -168,10 +180,8 @@ public class AudioPlayer {
 
     public void stopEffect(int effect) {
         if (effects[effect].isActive()) {
-            effects[effect].stop(); // Stop the sound effect
-            effects[effect].setMicrosecondPosition(0); // Reset to the beginning
+            effects[effect].stop();
+            effects[effect].setMicrosecondPosition(0);
         }
     }
 }
-
-

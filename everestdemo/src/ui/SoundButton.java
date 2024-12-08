@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import utils.LoadSave;
@@ -47,18 +48,35 @@ public class SoundButton extends PauseButton {
         mousePressed = false;
     }
 
-    public void draw(Graphics g) { g.drawImage(soundImgs[rowIndex][colIndex], x, y, width, height, null);}
+    public void draw(Graphics g) {
+        g.drawImage(soundImgs[rowIndex][colIndex], x, y, width, height, null);
+    }
 
-    public boolean isMouseOver() {return mouseOver;}
+    public boolean isMouseOver() {
+        return mouseOver;
+    }
 
-    public void setMouseOver(boolean mouseOver) {this.mouseOver = mouseOver;}
+    public void setMouseOver(boolean mouseOver) {
+        this.mouseOver = mouseOver;
+    }
 
-    public boolean isMousePressed() {return mousePressed;}
+    public boolean isMousePressed() {
+        return mousePressed;
+    }
 
-    public void setMousePressed(boolean mousePressed) {this.mousePressed = mousePressed;}
+    public void setMousePressed(boolean mousePressed) {
+        this.mousePressed = mousePressed;
+    }
 
-    public boolean isMuted() {return muted;}
+    public boolean isMuted() {
+        return muted;
+    }
 
-    public void setMuted(boolean muted) {this.muted = muted;}
+    public void setMuted(boolean muted) {
+        this.muted = muted;
+    }
 
+    public void mousePressed(MouseEvent e) {
+        // Currently empty
+    }
 }

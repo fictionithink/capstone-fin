@@ -14,128 +14,152 @@ import static utils.Constants.UI.UrmButtons.*;
 public class GameOptions extends State implements Statemethods {
 
     private AudioOptions audioOptions;
-    private BufferedImage backgroundImg, optionsBackgroundImg, skyBackgroundImg, skyBackground2Img;
+    private BufferedImage backgroundImg, optionsBackgroundImg;
+    private BufferedImage cloudBackground1, cloudBackground2, cloudBackground3, cloudBackground4;
     private int bgX, bgY, bgW, bgH;
 
-    private int skyX1, skyX2; // Two positions for the sky background to create a looping effect
+    private double SKYscrollOffset, CITYscrollOffset, CLOUD4scrollOffset, CLOUD3scrollOffset;
     private UrmButton menuB;
 
     public GameOptions(Game game) {
         super(game);
         loadImgs();
         loadButton();
-        audioOptions = game.getAudioOptions();
-        skyX1 = 0; // Initialize first sky position
-        skyX2 = Game.GAME_WIDTH; // Initialize second sky position
+        audioOptions = new AudioOptions(game, 1);
+        System.out.println("AudioOptions initialized: " + (audioOptions != null));
     }
 
     private void loadButton() {
-        int menuX = (int) (387 * Game.SCALE);
-        int menuY = (int) (325 * Game.SCALE);
-
-        menuB = new UrmButton(menuX, menuY, URM_SIZE, URM_SIZE, 2);
+        int menuX = (int) (403 * Game.SCALE);
+        int menuY = (int) (300 * Game.SCALE);
+        menuB = new UrmButton(menuX, menuY, URM_SIZE_MENU + 100, URM_SIZE_MENU + 100, 2, 6);
+        System.out.println("Button Position: (" + menuB.getX() + ", " + menuB.getY() + ")");
     }
 
     private void loadImgs() {
-        skyBackgroundImg = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND);
-        skyBackground2Img = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND_IMG);
-        backgroundImg = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND_IMG);
-        optionsBackgroundImg = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND);
+        optionsBackgroundImg = LoadSave.getSpriteAtlas(LoadSave.OPTIONS_MENU);
 
-        bgW = (int) (optionsBackgroundImg.getWidth() * Game.SCALE);
-        bgH = (int) (optionsBackgroundImg.getHeight() * Game.SCALE);
-        bgX = Game.GAME_WIDTH / 2 - bgW / 2;
-        bgY = (int) (33 * Game.SCALE);
+        backgroundImg = LoadSave.getSpriteAtlas(LoadSave.MENU_BACKGROUND_IMG);
+        cloudBackground1 = LoadSave.getSpriteAtlas(LoadSave.CLOUD_1);
+        cloudBackground2 = LoadSave.getSpriteAtlas(LoadSave.CLOUD_2);
+        cloudBackground3 = LoadSave.getSpriteAtlas(LoadSave.CLOUD_3);
+        cloudBackground4 = LoadSave.getSpriteAtlas(LoadSave.CLOUD_4);
+
+        bgW = 800;
+        bgH = 500;
+        bgX = (Game.GAME_WIDTH / 2 - bgH / 2) - 150;
+        bgY = (int) (80 * Game.SCALE);
     }
 
     @Override
     public void update() {
+        audioOptions.updateMenu();
         menuB.update();
-      //  audioOptions.update();
 
-        // Move both sky images to the left
-        skyX1 -= 0.5;
-        skyX2 -= 0.5;
-
-        // If skyX1 goes off the screen, reset it to the right side
-        if (skyX1 <= -Game.GAME_WIDTH) {
-            skyX1 = Game.GAME_WIDTH;
+        // Parallax Scrolling
+        SKYscrollOffset -= 1.0;
+        if (SKYscrollOffset <= -Game.GAME_WIDTH) {
+            SKYscrollOffset = 0;
         }
 
-        // If skyX2 goes off the screen, reset it to the right side
-        if (skyX2 <= -Game.GAME_WIDTH) {
-            skyX2 = Game.GAME_WIDTH;
+        CITYscrollOffset -= 0.5;
+        if (CITYscrollOffset <= -Game.GAME_WIDTH) {
+            CITYscrollOffset = 0;
+        }
+
+        CLOUD4scrollOffset -= 0.2;
+        if (CLOUD4scrollOffset <= -Game.GAME_WIDTH) {
+            CLOUD4scrollOffset = 0;
+        }
+
+        CLOUD3scrollOffset -= 0.3;
+        if (CLOUD3scrollOffset <= -Game.GAME_WIDTH) {
+            CLOUD3scrollOffset = 0;
         }
     }
 
-
-
     @Override
     public void draw(Graphics g) {
-        // Draw the sky backgrounds at the correct positions for the parallax effect
-        g.drawImage(skyBackgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+        // Parallax Layers
+        g.drawImage(cloudBackground1, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+        g.drawImage(cloudBackground2, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
 
-        g.drawImage(skyBackground2Img, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+        g.drawImage(cloudBackground3, (int) CLOUD3scrollOffset, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+        g.drawImage(cloudBackground3, (int) CLOUD3scrollOffset + Game.GAME_WIDTH, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
 
-        // Draw the other UI elements like background and options menu
-        g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+        g.drawImage(cloudBackground4, (int) CLOUD4scrollOffset, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+        g.drawImage(cloudBackground4, (int) CLOUD4scrollOffset + Game.GAME_WIDTH, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+
+        g.drawImage(backgroundImg, (int) CITYscrollOffset, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+        g.drawImage(backgroundImg, (int) CITYscrollOffset + Game.GAME_WIDTH, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+
         g.drawImage(optionsBackgroundImg, bgX, bgY, bgW, bgH, null);
 
-        // Draw buttons and other UI elements
-        menuB.draw(g);
-        audioOptions.draw(g);
+        // UI Elements
+        audioOptions.drawMenu(g);
+        menuB.drawMenu(g);
     }
 
     public void mouseDragged(MouseEvent e) {
         audioOptions.mouseDragged(e);
+        if (audioOptions.getvolumeButtonMenu().isMousePressed()) {
+            audioOptions.getvolumeButtonMenu().changeX(e.getX());
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        System.out.println("Mouse pressed at: " + e.getX() + ", " + e.getY());
         if (isIn(e, menuB)) {
             menuB.setMousePressed(true);
-        } else
+            System.out.println("UrmButton pressed");
+        } else {
             audioOptions.mousePressed(e);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         if (isIn(e, menuB)) {
-            if (menuB.isMousePressed())
+            if (menuB.isMousePressed()) {
                 Gamestate.state = Gamestate.MENU;
-        } else
+            }
+        } else {
             audioOptions.mouseReleased(e);
-
+        }
         menuB.resetBools();
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         menuB.setMouseOver(false);
-
-        if (isIn(e, menuB))
+        if (isIn(e, menuB)) {
             menuB.setMouseOver(true);
-        else
+        } else {
             audioOptions.mouseMoved(e);
+        }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             Gamestate.state = Gamestate.MENU;
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
+        // Not implemented
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
+        // Not implemented
     }
 
     private boolean isIn(MouseEvent e, UrmButton b) {
-        return b.getBounds().contains(e.getX(), e.getY());
+        boolean inside = b.getBounds().contains(e.getX(), e.getY());
+        System.out.println("Mouse is inside button: " + inside);
+        return inside;
     }
 }
