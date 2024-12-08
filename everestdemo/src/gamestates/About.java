@@ -9,7 +9,7 @@
     import java.awt.event.MouseEvent;
     import java.awt.image.BufferedImage;
 
-    import static utils.Constants.UI.UrmButtons.URM_SIZE_MENU;
+    //import static utils.Constants.UI.UrmButtons.URM_SIZE_MENU;
 
     public class About extends State implements Statemethods {
 
@@ -34,7 +34,7 @@
             // Assign to instance variables, not local variables
             this.menuX = (int) (403 * Game.SCALE);
             this.menuY = (int) (400 * Game.SCALE); // Place it near the bottom
-            menuB = new UrmButton(menuX, menuY, URM_SIZE_MENU , URM_SIZE_MENU , 2, 6);
+            //menuB = new UrmButton(menuX, menuY, URM_SIZE_MENU , URM_SIZE_MENU , 2, 6);
         }
 
         @Override
@@ -49,7 +49,7 @@
             g.drawImage(aboutP, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
 
             // Draw the menu button
-            menuB.drawMenu(g);
+            //menuB.drawMenu(g);
         }
 
         @Override

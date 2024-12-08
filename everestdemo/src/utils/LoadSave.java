@@ -19,8 +19,12 @@ public class LoadSave {
     public static final String CLOUD_2 = "CloudBackground2.png";
     public static final String CLOUD_3 = "CloudBackground3.png";
     public static final String CLOUD_4 = "CloudBackground4.png";
+    public static final String OPTIONS_MENU = "MenuBackGroundNewPathfinder.png";
+    public static final String NEWMENU = "MenuBackGroundNewPathfinder.png";
+    public static final String ABOUT_PAGE = "aboutPageOfficial.png";
+
     public static final String MENU_BACKGROUND_IMG = "PurpleSkyBackground.png";
-//    public static final String LEVEL_1_DATA = "level_1_data.png";
+    //    public static final String LEVEL_1_DATA = "level_1_data.png";
     public static final String LEVEL_1_DATA = "level_1_data_long.png";
     public static final String CYBER_ARM = "cyber_arm.png";
     public static final String CAT_PIXEL = "Cat Sprite Sheet.png";
@@ -52,7 +56,7 @@ public class LoadSave {
         BufferedImage img;
         InputStream is = LoadSave.class.getResourceAsStream("/" + fileName);
         try{
-           img = ImageIO.read(is);
+            img = ImageIO.read(is);
         } catch (IOException e) {
             System.err.println("image not found?! what the sigma???");
             throw new RuntimeException(e);
@@ -104,4 +108,3 @@ public class LoadSave {
     }
 
 }
-
