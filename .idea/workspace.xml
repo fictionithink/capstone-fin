@@ -4,24 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a6729c4-fc3f-4301-93d7-2f740e2936b6" name="Changes" comment="Update LoadSave.java">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/audio/AudioPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/audio/AudioPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/entities/Enemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/entities/Enemy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/gamestates/About.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/gamestates/About.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/gamestates/GameOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/gamestates/GameOptions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/gamestates/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/gamestates/Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/gamestates/Playing.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/gamestates/Playing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/gamestates/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/gamestates/State.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/inputs/MouseInputs.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/inputs/MouseInputs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/main/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/main/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/ui/AudioOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/ui/AudioOptions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/ui/PauseButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/ui/PauseButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/ui/SoundButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/ui/SoundButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/ui/UrmButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/ui/UrmButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/ui/VolumeButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/ui/VolumeButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/everestdemo/src/utils/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/utils/Constants.java" afterDir="false" />
-    </list>
+    <list default="true" id="5a6729c4-fc3f-4301-93d7-2f740e2936b6" name="Changes" comment="Update LoadSave.java" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,6 +15,12 @@
       <list>
         <option value="fictionithink &lt;139228422+fictionithink@users.noreply.github.com&gt;" />
       </list>
+    </option>
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
@@ -98,7 +87,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733663510043</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Update LoadSave.java">
+      <option name="closed" value="true" />
+      <created>1733667496965</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1733667496965</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
