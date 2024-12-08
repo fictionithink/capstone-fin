@@ -31,4 +31,4 @@ public class GameOverOverlay {
             Gamestate.state = Gamestate.MENU;
         }
     }
-}
+} 
