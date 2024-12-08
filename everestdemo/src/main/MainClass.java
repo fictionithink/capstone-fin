@@ -7,4 +7,4 @@ public class MainClass {
 
         new Game();                         // initializes the game
     }
-}
+} 
