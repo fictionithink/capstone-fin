@@ -250,4 +250,4 @@ public class Playing extends State implements Statemethods{
     public void setGameOVer(boolean gameOver) {
         this.gameOver = gameOver;
     }
-}
+} 
