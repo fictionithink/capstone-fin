@@ -18,12 +18,6 @@ public class UrmButton extends PauseButton {
         loadImgs();
     }
 
-    public UrmButton(int x, int y, int width, int height, int rowIndex, int hola) {
-        super(x, y, width, height,1);
-        this.rowIndex = rowIndex;
-        loadImgs();
-    }
-
     private void loadImgs() {
         BufferedImage temp = LoadSave.getSpriteAtlas(LoadSave.URM_BUTTONS);
         imgs = new BufferedImage[3];
@@ -41,12 +35,7 @@ public class UrmButton extends PauseButton {
     }
 
     public void draw(Graphics g){
-        update();
         g.drawImage(imgs[index],x, y, URM_SIZE, URM_SIZE, null);
-    }
-    public void drawMenu(Graphics g){
-        update();
-        g.drawImage(imgs[index],x, y, URM_SIZE_MENU, URM_SIZE_MENU, null);
     }
 
     public void resetBools() {
@@ -69,5 +58,5 @@ public class UrmButton extends PauseButton {
     public void setMousePressed(boolean mousePressed) {
         this.mousePressed = mousePressed;
     }
-
 }
+
