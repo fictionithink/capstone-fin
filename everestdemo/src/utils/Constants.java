@@ -23,6 +23,7 @@ public class Constants {
 
     public static class EnemyConstants {
         public static final int WORKER = 0;
+        public static final int MUSCLE = 1;
 
         public static final int IDLE = 0;
         public static final int RUNNING = 1;
@@ -33,15 +34,26 @@ public class Constants {
         public static final int WORKER_WIDTH_DEFAULT = 48;
         public static final int WORKER_HEIGHT_DEFAULT = 48;
 
+        public static final int MUSCLE_WIDTH_DEFAULT = 48;
+        public static final int MUSCLE_HEIGHT_DEFAULT = 48;
+
         public static final int WORKER_WIDTH = (int)(WORKER_WIDTH_DEFAULT * Game.SCALE);
         public static final int WORKER_HEIGHT = (int)(WORKER_HEIGHT_DEFAULT * Game.SCALE);
+
+        public static final int MUSCLE_WIDTH = (int)(MUSCLE_WIDTH_DEFAULT * Game.SCALE);
+        public static final int MUSCLE_HEIGHT = (int)(MUSCLE_HEIGHT_DEFAULT * Game.SCALE);
 
         public static final int WORKER_DRAWOFFSET_X = (int)(48 * Game.SCALE);
         public static final int WORKER_DRAWOFFSET_Y = (int)(48 * Game.SCALE);
 
+        public static final int MUSCLE_DRAWOFFSET_X = (int)(48 * Game.SCALE);
+        public static final int MUSCLE_DRAWOFFSET_Y = (int)(48 * Game.SCALE);
+
+
         public static int GetSpriteAmount(int enemy_type, int enemy_state) {
             switch (enemy_type) {
                 case WORKER:
+                case MUSCLE:
                     switch (enemy_state) {
                         case IDLE:
                             return 3;
@@ -60,6 +72,8 @@ public class Constants {
             switch (enemyType) {
                 case WORKER:
                     return 10;
+                case MUSCLE:
+                    return 20;
                 default:
                     return 1;
             }
@@ -68,7 +82,9 @@ public class Constants {
         public static int GetEnemyDMG(int enemyType) {
             switch (enemyType) {
                 case WORKER:
-                    return 15;
+                    return 10;
+                case MUSCLE:
+                    return 17;
                 default:
                     return 1;
             }

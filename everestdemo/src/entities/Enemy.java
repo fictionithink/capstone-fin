@@ -11,7 +11,7 @@ import static utils.Constants.Directions.*;
 public abstract class Enemy extends Entity {
 
     protected int walkDir = LEFT;
-    protected float walkSpeed = .6f * Game.SCALE;
+    protected float walkSpeed;
     protected float gravity = 0.04f * Game.SCALE;
     protected boolean firstUpdate = true;
     protected boolean inAir;
@@ -25,8 +25,9 @@ public abstract class Enemy extends Entity {
     protected boolean active = true;
     protected boolean attackedChecked;
 
-    public Enemy(float x, float y, int width, int height, int enemyType) {
+    public Enemy(float x, float y, int width, int height, int enemyType, float walkSpeed) {
         super(x, y, width, height);
+        this.walkSpeed=walkSpeed;
         this.enemyType = enemyType;
         initHitbox(x, y, width, height);
         maxHealth = getMaxHealth(enemyType);

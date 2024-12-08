@@ -4,11 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a6729c4-fc3f-4301-93d7-2f740e2936b6" name="Changes" comment="Update LoadSave.java" />
+    <list default="true" id="5a6729c4-fc3f-4301-93d7-2f740e2936b6" name="Changes" comment="Update LoadSave.java">
+      <change afterPath="$PROJECT_DIR$/everestdemo/src/entities/Muscle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/muscle_enemy.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/everestdemo/src/entities/Enemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/entities/Enemy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/everestdemo/src/entities/EnemyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/entities/EnemyManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/everestdemo/src/entities/Worker.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/entities/Worker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/everestdemo/src/utils/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/utils/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/everestdemo/src/utils/LoadSave.java" beforeDir="false" afterPath="$PROJECT_DIR$/everestdemo/src/utils/LoadSave.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/level_1_data_long.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/level_1_data_long.png" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
@@ -45,16 +62,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.MainClass.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kurtd/IdeaProjects/capstone-2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MainClass.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/khein/IdeaProjects/capstone-2/res"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\khein\IdeaProjects\capstone-2\res" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="MainClass" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="main.MainClass" />

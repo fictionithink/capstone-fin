@@ -1,8 +1,10 @@
 package utils;
 
+import entities.Muscle;
 import entities.Worker;
 import main.Game;
 
+import static utils.Constants.EnemyConstants.MUSCLE;
 import static utils.Constants.EnemyConstants.WORKER;
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -29,11 +31,12 @@ public class LoadSave {
     public static final String CYBER_ARM = "cyber_arm.png";
     public static final String CAT_PIXEL = "Cat Sprite Sheet.png";
     public static final String MENU_BUTTONS = "menu_atlas.png";
-    public static final String MENU_BACKGROUND = "citiciti.jpg";
-    public static final String ENEMY_WORKER_LEFT = "man_left_spritesheet.png";
+
     public static final String ENEMY_WORKER_RIGHT = "man_right_spritesheet.png";
+    public static final String ENEMY_MUSCLE = "muscle_enemy.png";
+
     public static final String MENU_TITLE = "pathfinder.png";
-    public static final String LASER_BEAM_SPRITE = "laser_beam.png";
+
     public static final String PAUSE_BACKGROUND = "pause menu.png";
     public static final String SOUND_BUTTONS = "music atlas.png";
     public static final String URM_BUTTONS = "pause atlas.png";
@@ -70,6 +73,22 @@ public class LoadSave {
         return img;
     }
 
+    public static ArrayList<Muscle> GetMuscles() {
+        BufferedImage img = getSpriteAtlas(LEVEL_1_DATA);
+        ArrayList<Muscle> list =    new ArrayList<>();
+
+        for(int j = 0; j < img.getHeight(); j++){
+            for(int i = 0; i < img.getWidth(); i++){
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if(value == WORKER)
+                    list.add(new Muscle(i* Game.TILES_SIZE, j* Game.TILES_SIZE));
+
+            }
+        }
+        return list;
+    }
+
     public static ArrayList<Worker> GetWorkers(){
         BufferedImage img = getSpriteAtlas(LEVEL_1_DATA);
         ArrayList<Worker> list =    new ArrayList<>();
@@ -78,7 +97,7 @@ public class LoadSave {
             for(int i = 0; i < img.getWidth(); i++){
                 Color color = new Color(img.getRGB(i, j));
                 int value = color.getGreen();
-                if(value == WORKER)
+                if(value == MUSCLE)
                     list.add(new Worker(i* Game.TILES_SIZE, j* Game.TILES_SIZE));
 
             }
@@ -106,5 +125,6 @@ public class LoadSave {
     public static BufferedImage getArmSprite() {
         return getSpriteAtlas(CYBER_ARM);
     }
+
 
 }
