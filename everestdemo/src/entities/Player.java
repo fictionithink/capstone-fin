@@ -1,5 +1,6 @@
 package entities;
 
+import gamestates.Gamestate;
 import gamestates.Playing;
 import gamestates.State;
 import main.Game;
@@ -99,11 +100,19 @@ public class Player extends Entity{
         float startX = arm.x + arm.width / 2;
         float startY = arm.y + arm.height / 2;
 
-        // Create the laser
-
+        // Create the laser immediately
         currentLaser = new LaserBeam(startX, startY, gunAngle);
+
+        // Play the laser shooting sound effect immediately
+        new Thread(() -> {
+            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.ATTACK_ONE);
+        }).start();
+
+        // Record the laser start time
         laserStartTime = System.currentTimeMillis();
-        canShoot=false;
+
+        // Prevent shooting until cooldown is over
+        canShoot = false;
     }
 
 
@@ -357,8 +366,8 @@ public class Player extends Entity{
     private void jump() {
         if(inAir)
             return;
-        if (playing.getGame().getState() instanceof Playing) {
-            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);}
+
+            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
             inAir = true;
             airSpeed = jumpSpeed;
 
@@ -410,11 +419,12 @@ public class Player extends Entity{
     }
 
     public void setAttacking(boolean attacking) {
-        if (playing.getGame().getState() instanceof Playing) {
-            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.ATTACK_ONE);
-        }
         this.attacking = attacking;
 
+        // Immediately play the punching sound
+        if (attacking) {
+            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.ATTACK_THREE);
+        }
     }
 
     public void setLeft(boolean left) {

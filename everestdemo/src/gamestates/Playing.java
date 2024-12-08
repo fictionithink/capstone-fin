@@ -1,5 +1,6 @@
 package gamestates;
 
+import audio.AudioPlayer;
 import entities.EnemyManager;
 import entities.Player;
 import levels.LevelManager;
@@ -103,6 +104,9 @@ public class Playing extends State implements Statemethods{
             case KeyEvent.VK_ESCAPE:
                 paused = !paused;
                 break;
+            case KeyEvent.VK_ENTER: // VK_( Enter ) key
+                player.shootLaser(); // Shoot laser when Enter is pressed
+                break;
         }
     }
 
@@ -118,6 +122,7 @@ public class Playing extends State implements Statemethods{
             case KeyEvent.VK_SPACE:                         //VK_( Space bar ) key
                 player.setJump(false);
                 break;
+
         }
     }
 
@@ -139,8 +144,10 @@ public class Playing extends State implements Statemethods{
         int button = e.getButton();
         if (button == MouseEvent.BUTTON1) { // Left-click
             player.setAttacking(true); // Ensure this is called
-        } else if (button == MouseEvent.BUTTON3) { // Right-click
+
+        } else if (button == MouseEvent.BUTTON3 || button == KeyEvent.VK_ENTER) { // Right-click
             getPlayer().shootLaser();
+
         }
     }
 
