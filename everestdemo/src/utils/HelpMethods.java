@@ -14,8 +14,7 @@ import static utils.Constants.EnemyConstants.WORKER;
 
 public class HelpMethods {
 
-    public static boolean CanMoveHere(float x, float y, float width, float height, int[][] lvlData) {
-        // Check all corners
+    public static boolean CanMoveHere(float x, float y, float width, float height, int[][] lvlData) 
         if (!IsSolid(x, y, lvlData))
             if (!IsSolid(x + width, y+height, lvlData))
                 if (!IsSolid(x+width, y, lvlData))
@@ -30,7 +29,7 @@ public class HelpMethods {
         int maxWidth = lvlData[0].length * Game.TILES_SIZE;
 
         if (x < 0 || x >= maxWidth || y < 0 || y >= Game.GAME_HEIGHT) {
-            return true; // Out of bounds
+            return true;
         }
 
         float xIndex = x / Game.TILES_SIZE;
