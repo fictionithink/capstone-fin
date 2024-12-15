@@ -16,7 +16,6 @@ public class Worker extends Enemy {
     public Worker(float x, float y) {
         super(x, y, WORKER_WIDTH, WORKER_HEIGHT, WORKER,.4f * Game.SCALE);
 
-        // Align hitbox size and offset
         initHitbox(x+30, y + (int)(14 * Game.SCALE), (int)(30 * Game.SCALE), (int)(28.5 * Game.SCALE));
         initAttackBox();
     }
@@ -47,7 +46,6 @@ public class Worker extends Enemy {
         if (inAir) {
             updateInAir(lvlData);
         } else {
-            // Movement logic
             switch (enemyState) {
                 case IDLE:
                     newState(RUNNING);
@@ -66,7 +64,7 @@ public class Worker extends Enemy {
                         attackedChecked = false;
                     }
                     if (aniIndex == 4 && !attackedChecked) {
-                        checkEnemyHit(attackBox, player); // Damage the player when in range
+                        checkEnemyHit(attackBox, player);
                     }
                     break;
 
