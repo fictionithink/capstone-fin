@@ -77,6 +77,5 @@ public class SoundButton extends PauseButton {
     }
 
     public void mousePressed(MouseEvent e) {
-        // Currently empty
     }
 }
