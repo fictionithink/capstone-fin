@@ -83,10 +83,10 @@ public class Player extends Entity{
     public Player(float x, float y, int width, int height, Game game,Playing playing) {
         super(x, y, width, height);
         this.playing = playing;
-        this.gamePanel = game.getGamePanel(); // Retrieve GamePanel from Game
+        this.gamePanel = game.getGamePanel()
         loadAnimations();
         initHitbox(x, y, (int)(21 * SCALE), (int)(28.5*SCALE));
-        initArm(); // Initialize the arm
+        initArm();
         loadArmSprite();
 
     }
@@ -103,7 +103,7 @@ public class Player extends Entity{
 
     private void initArm() {
 
-        arm = new Rectangle2D.Float(0, 0, 32 * SCALE, 32 * SCALE); // Adjust dimensions as per the sprite
+        arm = new Rectangle2D.Float(0, 0, 32 * SCALE, 32 * SCALE);
     }
 
     private void updateArmRotation() {
@@ -112,15 +112,12 @@ public class Player extends Entity{
             return;
         }
 
-        // Get mouse coordinates
         float mouseX = gamePanel.getMouseX();
         float mouseY = gamePanel.getMouseY();
 
-        // Calculate distance from arm pivot to mouse
         float xDistance = mouseX - (arm.x + arm.width / 2);
         float yDistance = mouseY - (arm.y + arm.height / 2);
 
-        // Calculate angle in radians
         gunAngle = (float) Math.atan2(yDistance, xDistance);
     }
 
@@ -153,19 +150,16 @@ public class Player extends Entity{
                 break;
         }
 
-        // Adjust arm position to account for the level offset
         arm.x = hitbox.x + xOffset - gamePanel.getGame().getPlaying().getXLevelOffset();
         arm.y = hitbox.y + yOffset;
     }
 
 
     private void drawArm(Graphics2D g) {
-        // Save the original transformation
+
         AffineTransform originalTransform = g.getTransform();
 
-
-        // Translate to the arm's pivot point (center of the arm)
-        float pivotX = arm.x + arm.width / 2; // Center of the arm
+        float pivotX = arm.x + arm.width / 2;
         float pivotY = arm.y + arm.height / 2;
         g.translate(pivotX, pivotY);
 
@@ -178,14 +172,12 @@ public class Player extends Entity{
                 (int) arm.width * flipW,
                 (int) arm.height, null);
 
-        // Restore the original transformation
         g.setTransform(originalTransform);
 
-        // Draw a debug line from the arm's center to show the direction of the mouse
         g.setColor(Color.RED);
 
 
-        int lineLength = 200; // Length of the line in pixels
+        int lineLength = 200;
         g.drawLine(
                 (int) pivotX,
                 (int) pivotY,
@@ -193,7 +185,6 @@ public class Player extends Entity{
                 (int) (pivotY + Math.sin(gunAngle) * lineLength)
         );
 
-        // Optional: Debug line directly to the mouse position
         g.setColor(Color.BLUE);
         g.drawLine(
                 (int) pivotX,
@@ -217,20 +208,20 @@ public class Player extends Entity{
         }
         updateAnimationTick();
         setAnimation();
-        updateArmPosition(); // Update the arm's visual position
-        updateArmRotation(); // Update the arm rotation
+        updateArmPosition();
+        updateArmRotation();
 
         if (moving && !isRunningSoundPlaying) {
-            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.RUNNING); // Replace with your running sound constant
+            playing.getGame().getAudioPlayer().playEffect(AudioPlayer.RUNNING);
             isRunningSoundPlaying = true;
         } else if (!moving && isRunningSoundPlaying) {
-            playing.getGame().getAudioPlayer().stopEffect(AudioPlayer.RUNNING); // Stop the sound
+            playing.getGame().getAudioPlayer().stopEffect(AudioPlayer.RUNNING);
             isRunningSoundPlaying = false;
         }
 
         if (currentLaser != null) {
             currentLaser.update();
-            if (currentLaser.isFaded()) { // 500 milliseconds = 0.5 seconds
+            if (currentLaser.isFaded()) {
                 currentLaser = null;
             }
         }
@@ -328,8 +319,7 @@ public class Player extends Entity{
         if(jump)
             jump();
 //        if (!left && !right && !inAir)
-//            return; // No input, no movement
-
+//            return;
         if(!inAir)
             if((!left && !right) || (right && left))
                 return;
@@ -455,8 +445,6 @@ public class Player extends Entity{
     public void setUp(boolean up) {
         this.up = up;
     }
-
-
 
     public void setRight(boolean right) {
         this.right = right;
