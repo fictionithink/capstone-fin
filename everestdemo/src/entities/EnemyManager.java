@@ -27,20 +27,17 @@ public class EnemyManager {
     public void loadEnemies(Level level) {
         workers = level.getWorkers();
         muscles = level.getMuscles();
-//        System.out.println("size of enemies: " + workers.size());
-//        System.out.println("size of muscle enemies: " + muscles.size());
     }
 
     public void checkLaserHit(LaserBeam laser) {
         for (Worker w : workers) {
             if (w.isActive() && laser != null) {
                 if (w.getHitbox().intersectsLine(laser.getHitbox())) {
-                    w.hurt(10); // Deal damage to the worker
+                    w.hurt(10);
 
-                    // Stop laser at the enemy's hitbox position
                     laser.setEndPosition(w.getHitbox().x + w.getHitbox().width / 2,
                             w.getHitbox().y + w.getHitbox().height / 2);
-                    return; // Exit after the first collision
+                    return;
                 }
             }
         }
@@ -48,12 +45,10 @@ public class EnemyManager {
         for (Muscle m : muscles) {
             if (m.isActive() && laser != null) {
                 if (m.getHitbox().intersectsLine(laser.getHitbox())) {
-                    m.hurt(10); // Deal damage to the worker
-
-                    // Stop laser at the enemy's hitbox position
+                    m.hurt(10);
                     laser.setEndPosition(m.getHitbox().x + m.getHitbox().width / 2,
                             m.getHitbox().y + m.getHitbox().height / 2);
-                    return; // Exit after the first collision
+                    return;
                 }
             }
         }
@@ -74,12 +69,12 @@ public class EnemyManager {
         for (Muscle m : muscles) {
             if (m.isActive()) {
                 m.update(lvlData, player);
-                isAnyActive = true; // This will now only execute if m.isActive() is true
+                isAnyActive = true;
             }
         }
 
         if (!isAnyActive) {
-            playing.setLevelCompleted(true); // Only triggers if no enemies are active
+            playing.setLevelCompleted(true);
         }
     }
 
@@ -93,17 +88,16 @@ public class EnemyManager {
         for (Worker w : workers) {
 
             if(w.isActive()) {
-                // Add a vertical offset to align the worker sprite properly
-                int verticalOffset = (int) (17 * Game.SCALE); // Adjust the value to lift the sprite higher
+                int verticalOffset = (int) (17 * Game.SCALE);
 
                 g.drawImage(workerArr[w.getEnemyState()][w.getAniIndex()],
                         (int) w.getHitbox().x - xLevelOffset + w.flipX(),
-                        (int) w.getHitbox().y - verticalOffset, // Apply the vertical offset
+                        (int) w.getHitbox().y - verticalOffset,
                         WORKER_WIDTH * w.flipW(),
                         WORKER_HEIGHT,
                         null);
 
-                // Draw the worker's hitbox for debugging
+                // worker's hitbox for debugging
                 w.drawHitBox(g, xLevelOffset);
                 w.drawAttackBox(g, xLevelOffset);
             }
@@ -114,17 +108,16 @@ public class EnemyManager {
         for (Muscle m : muscles) {
 
             if(m.isActive()) {
-                // Add a vertical offset to align the worker sprite properly
-                int verticalOffset = (int) (17 * Game.SCALE); // Adjust the value to lift the sprite higher
+                int verticalOffset = (int) (17 * Game.SCALE);
 
                 g.drawImage(muscleArr[m.getEnemyState()][m.getAniIndex()],
                         (int) m.getHitbox().x - xLevelOffset + m.flipX(),
-                        (int) m.getHitbox().y - verticalOffset, // Apply the vertical offset
+                        (int) m.getHitbox().y - verticalOffset,
                         MUSCLE_WIDTH * m.flipW(),
                         MUSCLE_HEIGHT,
                         null);
 
-                // Draw the worker's hitbox for debugging
+                // worker's hitbox for debugging
                 m.drawHitBox(g, xLevelOffset);
                 m.drawAttackBox(g, xLevelOffset);
             }
