@@ -7,7 +7,7 @@ import gamestates.GameOptions;
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
-import gamestates.About; // Added for About state
+import gamestates.About;
 import inputs.MouseInputs;
 import ui.AudioOptions;
 import utils.LoadSave;
@@ -24,7 +24,7 @@ public class Game implements Runnable {
 
     private Playing playing;
     private Menu menu;
-    private About about; // Added About state
+    private About about;
     private AudioPlayer audioPlayer;
     private AudioOptions audioOptions;
     private GameOptions gameOptions;
@@ -38,22 +38,22 @@ public class Game implements Runnable {
     public static final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
     private boolean initialized = false;
-    private boolean isFirstRender = true; // Flag to track the first render cycle
+    private boolean isFirstRender = true;
 
     // Constructor
     public Game() {
 
         gamePanel = new GamePanel(this);
-        gamePanel.addMouseListener(new MouseInputs(gamePanel)); // Creating MouseInputs instance
+        gamePanel.addMouseListener(new MouseInputs(gamePanel));
         gameWindow = new GameWindow(gamePanel);
-        initClasses(); // Initialize menu and other components
-        initialized = true; // Set this flag after everything is initialized
-        Gamestate.state = Gamestate.MENU; // Set state to MENU after initialization
+        initClasses();
+        initialized = true;
+        Gamestate.state = Gamestate.MENU;
         gamePanel.setFocusable(true);
         gamePanel.requestFocus();
-        gamePanel.enableMouseInput(); // Enable mouse input after the first render
+        gamePanel.enableMouseInput();
 
-        // Start the game loop after initialization
+        // start the game loop after initialization
         startGameLoop();
     }
 
@@ -64,7 +64,7 @@ public class Game implements Runnable {
         audioPlayer = new AudioPlayer(this);
         gameOptions = new GameOptions(this);
         audioOptions = new AudioOptions(this);
-        about = new About(this); // Initialize About state
+        about = new About(this);
     }
 
     private void startGameLoop() {
@@ -84,7 +84,7 @@ public class Game implements Runnable {
                 gameOptions.update();
                 break;
             case ABOUT:
-                about.update(); // Update About state
+                about.update();
                 break;
             case EXIT:
             default:
@@ -94,15 +94,11 @@ public class Game implements Runnable {
     }
 
     public void render(Graphics g) {
-        // Delay first render cycle until everything is properly initialized
         if (isFirstRender) {
-            // Wait until the menu is initialized before accessing it
             if (menu == null || !menu.isInitialized()) {
-                return; // Skip rendering if the menu isn't initialized
+                return;
             }
-            isFirstRender = false; // Set the flag to prevent skipping future render cycles
-
-            // Enable mouse input after the first render
+            isFirstRender = false;
             gamePanel.enableMouseInputAfterRender();
         }
 
@@ -130,7 +126,7 @@ public class Game implements Runnable {
                 break;
             case ABOUT:
                 if (about != null) {
-                    about.draw(g); // Render About state
+                    about.draw(g);
                 } else {
                     System.err.println("Error: 'about' is null in Game.render()");
                 }
