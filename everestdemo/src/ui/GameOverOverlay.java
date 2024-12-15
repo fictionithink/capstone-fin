@@ -31,8 +31,8 @@ public class GameOverOverlay {
             playing.resetAll();
             Gamestate.state = Gamestate.MENU;
             playing.unpauseGame();
-            playing.getGame().getAudioPlayer().stopSong(); // Stop the level music
-            playing.getGame().getAudioPlayer().playSong(AudioPlayer.MenuMusic); // Play the menu music
+            playing.getGame().getAudioPlayer().stopSong();
+            playing.getGame().getAudioPlayer().playSong(AudioPlayer.MenuMusic);
         }
     }
 } 
