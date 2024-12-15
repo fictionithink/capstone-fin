@@ -19,23 +19,22 @@ public class Menu extends State implements Statemethods{
     private double SKYscrollOffset;
     private BufferedImage[] CatPixelated = new BufferedImage[4];
     private double CITYscrollOffset;
-    private double CLOUD4scrollOffset, CLOUD3scrollOffset; // Used for dynamic scrolling
-    private int currentTitleFrame = 0; // Index of the current frame
-    private long lastFrameTime = 0;    // Time when the last frame was updated
+    private double CLOUD4scrollOffset, CLOUD3scrollOffset;
+    private int currentTitleFrame = 0;
+    private long lastFrameTime = 0;
     private final long FRAME_INTERVAL = 400;
 
     public boolean isInitialized() {
         return isInitialized;
     }
 
-    private boolean isInitialized = false;  // Flag to track if menu is initialized
+    private boolean isInitialized = false;
 
     public Menu(Game game) {
         super(game);
         System.out.println("Menu constructor called.");
-        // loadButtons();
         loadCONTENT();
-        isInitialized = true;  // Mark as initialized after the menu and buttons are loaded
+        isInitialized = true;
     }
 
 
@@ -122,35 +121,35 @@ public class Menu extends State implements Statemethods{
     */
     @Override
     public void update() {
-        if (isInitialized) {  // Only update menu if it is initialized
+        if (isInitialized) {
             for (MenuButton mb : buttons)
                 mb.update();
         }
 
-        SKYscrollOffset -= 1.0; // Adjust speed here
+        SKYscrollOffset -= 1.0;
         if (SKYscrollOffset <= -Game.GAME_WIDTH) {
-            SKYscrollOffset = 0; // Reset when fully scrolled
+            SKYscrollOffset = 0l
         }
 
-        CITYscrollOffset -= 0.5; // Adjust speed here
+        CITYscrollOffset -= 0.5;
         if (CITYscrollOffset <= -Game.GAME_WIDTH) {
-            CITYscrollOffset = 0; // Reset when fully scrolled
+            CITYscrollOffset = 0;
         }
 
-        CLOUD4scrollOffset -= 0.2; // Adjust speed here
+        CLOUD4scrollOffset -= 0.2;
         if (CLOUD4scrollOffset <= -Game.GAME_WIDTH) {
-            CLOUD4scrollOffset = 0; // Reset when fully scrolled
+            CLOUD4scrollOffset = 0;
         }
 
-        CLOUD3scrollOffset -= 0.3; // Adjust speed here
+        CLOUD3scrollOffset -= 0.3;
         if (CLOUD3scrollOffset <= -Game.GAME_WIDTH) {
-            CLOUD3scrollOffset = 0; // Reset when fully scrolled
+            CLOUD3scrollOffset = 0;
         }
     }
 
     @Override
     public void draw(Graphics g) {
-        if (isInitialized) {  // Only draw menu if it is initialized
+        if (isInitialized) {
             //   g.drawImage(backgroundImg, 0, 0, GAME_WIDTH, GAME_HEIGHT, null);
             g.drawImage(cloudBackground1, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
             g.drawImage(cloudBackground2, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
@@ -167,10 +166,10 @@ public class Menu extends State implements Statemethods{
             g.drawImage(backgroundTitle, 0, menuY, GAME_WIDTH, GAME_HEIGHT, null);
 
             Graphics2D g2d = (Graphics2D) g;
-            Composite originalComposite = g2d.getComposite(); // Save the original composite
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)); // Set alpha to 30%
+            Composite originalComposite = g2d.getComposite();
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
             g2d.drawImage(overlayImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
-            g2d.setComposite(originalComposite); // Restore the original composite
+            g2d.setComposite(originalComposite);
 
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastFrameTime >= FRAME_INTERVAL) {
@@ -194,10 +193,10 @@ public class Menu extends State implements Statemethods{
     @Override
     public void mousePressed(MouseEvent e) {
         for (MenuButton mb : buttons) {
-            if (isIn(e, mb)) {  // Check if the mouse is over a button
-                mb.setMousePressed(true);  // Set this button as pressed
-                game.getAudioPlayer().playClick(); // Play button click sound
-                break;  // Exit the loop once the button is pressed
+            if (isIn(e, mb)) {
+                mb.setMousePressed(true);
+                game.getAudioPlayer().playClick();
+                break;
             }
         }
     }
@@ -208,8 +207,8 @@ public class Menu extends State implements Statemethods{
             if(isIn(e,mb)){
                 if(mb.isMousePressed()) {
                     if (mb.getState() == Gamestate.PLAYING) {
-                        game.getAudioPlayer().stopSong(); // Stop the menu music
-                        game.getAudioPlayer().setLevelSong(1); // Start playing level music
+                        game.getAudioPlayer().stopSong();
+                        game.getAudioPlayer().setLevelSong(1);
                     }
                     mb.applyGameState();
                 }
@@ -228,14 +227,13 @@ public class Menu extends State implements Statemethods{
     @Override
     public void mouseMoved(MouseEvent e) {
         for(MenuButton mb : buttons) {
-            mb.setMouseOver(false);  // Reset the state for each button
+            mb.setMouseOver(false);
         }
 
-        // Check all buttons for hover
         for(MenuButton mb : buttons) {
-            if (isIn(e, mb)) {  // Check if mouse is over the button
-                mb.setMouseOver(true);  // Set to true for the button the mouse is hovering over
-                break;  // Stop the loop once the mouse is over a button
+            if (isIn(e, mb)) {
+                mb.setMouseOver(true);
+                break;
             }
         }
     }
