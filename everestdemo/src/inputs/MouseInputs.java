@@ -21,14 +21,14 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (!gamePanel.enableMouseInput()) return; // Ignore if not ready
+        if (!gamePanel.enableMouseInput()) return;
 
         gamePanel.getGame().getPlaying().mouseClicked(e);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!gamePanel.enableMouseInput()) return; // Ignore if not ready
+        if (!gamePanel.enableMouseInput()) return;
 
         switch (Gamestate.state) {
             case PLAYING:
@@ -50,7 +50,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!gamePanel.enableMouseInput()) return; // Ignore if not ready
+        if (!gamePanel.enableMouseInput()) return;
 
         switch (Gamestate.state) {
             case PLAYING:
@@ -72,12 +72,12 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        // No implementation needed
+
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        // No implementation needed
+
     }
 
     // MOUSE MOTION LISTENER METHODS
@@ -98,7 +98,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (!gamePanel.enableMouseInput()) return; // Ignore if not ready
+        if (!gamePanel.enableMouseInput()) return;
 
         switch (Gamestate.state) {
             case PLAYING:
