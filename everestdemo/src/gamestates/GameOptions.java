@@ -56,7 +56,7 @@ public class GameOptions extends State implements Statemethods {
         audioOptions.updateMenu();
         menuB.update();
 
-        // Parallax Scrolling
+        //parallax Scrolling
         SKYscrollOffset -= 1.0;
         if (SKYscrollOffset <= -Game.GAME_WIDTH) {
             SKYscrollOffset = 0;
@@ -80,7 +80,7 @@ public class GameOptions extends State implements Statemethods {
 
     @Override
     public void draw(Graphics g) {
-        // Parallax Layers
+        // parallax Layers
         g.drawImage(cloudBackground1, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
         g.drawImage(cloudBackground2, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
 
@@ -149,12 +149,10 @@ public class GameOptions extends State implements Statemethods {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // Not implemented
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // Not implemented
     }
 
     private boolean isIn(MouseEvent e, UrmButton b) {
