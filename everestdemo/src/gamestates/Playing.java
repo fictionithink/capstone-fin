@@ -39,7 +39,7 @@ public class Playing extends State implements Statemethods{
 
     public Playing(Game game, GamePanel gamePanel) {
         super(game);
-        this.gamePanel = gamePanel; // Set GamePanel reference
+        this.gamePanel = gamePanel;
         initClasses();
 
         backgroundImg = LoadSave.getSpriteAtlas(LoadSave.W1_BACKGROUND);
@@ -53,7 +53,7 @@ public class Playing extends State implements Statemethods{
     }
 
     public void loadNextLevel() {
-        if (!roundCompleted) { // Ensure it's not already completed
+        if (!roundCompleted) {
             roundCompleted = true;
             resetAll();
             levelManager.loadNextLevel();
@@ -84,20 +84,16 @@ public class Playing extends State implements Statemethods{
         if (paused) {
             pauseOverlay.update();
         } else if (roundCompleted) {
-            // Update the round completed overlay
             roundCompletedOverlay.update();
 
-            // Ensure loadNextLevel() is only called once when the countdown ends
             if (!roundCompletedOverlay.isCountdownActive() && roundCompleted) {
-                roundCompleted = false; // Prevent further checks
+                roundCompleted = false;
                 loadNextLevel();
             }
         } else {
-            // Regular gameplay update
             levelManager.update();
             player.update();
 
-            // Handle laser and enemies
             if (player.getLaser() != null) {
                 enemyManager.checkLaserHit(player.getLaser());
             }
@@ -105,7 +101,6 @@ public class Playing extends State implements Statemethods{
             checkCloseToBorder();
         }
     }
-
 
     private void checkCloseToBorder() {
         int playerX = (int) player.getHitbox().x;
@@ -131,10 +126,10 @@ public class Playing extends State implements Statemethods{
         drawTrees(g);
 
         Graphics2D g2d = (Graphics2D) g;
-        Composite originalComposite = g2d.getComposite(); // Save the original composite
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)); // Set alpha to 30%
+        Composite originalComposite = g2d.getComposite();
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
         g2d.drawImage(overlayImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
-        g2d.setComposite(originalComposite); // Restore the original composite
+        g2d.setComposite(originalComposite);
 
         levelManager.draw(g, xLevelOffset);
         player.render(g, xLevelOffset);
@@ -211,7 +206,7 @@ public class Playing extends State implements Statemethods{
     public void mouseClicked(MouseEvent e) {
         if(!gameOver)
             if (e.getButton() == MouseEvent.BUTTON1)
-                player.setAttacking(true); // Ensure this is called
+                player.setAttacking(true); 
     }
 
     public void mouseDragged(MouseEvent e) {
@@ -231,9 +226,9 @@ public class Playing extends State implements Statemethods{
         }
 
         int button = e.getButton();
-        if (button == MouseEvent.BUTTON1) { // Left-click
+        if (button == MouseEvent.BUTTON1) {
             player.setAttacking(true);
-        } else if (button == MouseEvent.BUTTON3) { // Right or Middle-click
+        } else if (button == MouseEvent.BUTTON3) {
             getPlayer().shootLaser();
         }
     }
@@ -292,7 +287,7 @@ public class Playing extends State implements Statemethods{
     public void setLevelCompleted(boolean roundCompleted) {
         this.roundCompleted = roundCompleted;
         if (roundCompleted) {
-            roundCompletedOverlay.resetCountdown(); // Reset the timer
+            roundCompletedOverlay.resetCountdown();
         }
     }
 
